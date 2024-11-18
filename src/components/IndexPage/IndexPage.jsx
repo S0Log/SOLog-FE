@@ -1,40 +1,23 @@
 import React from "react";
-import SOLog from "../../assets/img/SOLog.png";
-import logotext from "../../assets/img/logotext.png";
-import shinhanfriends from "../../assets/img/shinhanfriends.png"
+import SOLog from "../../../public/img/SOLog.png";
+import logotext from "../../../public/img/logotext.png";
+import shinhanfriends from "../../../public/img/shinhanfriends.png";
+import Search from "../Search";
+import RecommendedStocks from "./RecommendedStocks";
 
 export default function IndexPage() {
   return (
-    <div>
-      <div>
-        <img src={SOLog} />
-      </div>
-      <div>
-        <img src={logotext} />
-      </div>
-      <div>
-        <input type="text" placeholder="종목을 입력해주세요." />
-      </div>
-      <div>
-
-        <span>추천종목</span>
-        <ul>
-          <li>
-            삼성전자
-          </li>
-          <li>
-            SK하이닉스
-          </li>
-          <li>
-            에너지솔루션
-          </li>
-          <li>
-            엔비디아
-          </li>
-        </ul>
-      </div>
-      <div>
-<img src={shinhanfriends} />
+    <div className="h-screen bg-mainColor pt-20 flex justify-center items-center">
+      <div className="transform scale-75">
+        <div className="mt-8 pb-8 flex flex-col items-center">
+          <img src={SOLog} alt="SOLog" />
+          <img src={logotext} alt="logotext" />
+        </div>
+        <Search />
+        <RecommendedStocks />
+        <div className="flex justify-center mt-8">
+          <img src={shinhanfriends} alt="shinhanfriends" />
+        </div>
       </div>
     </div>
   );
