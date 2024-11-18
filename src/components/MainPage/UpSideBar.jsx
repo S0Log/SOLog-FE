@@ -1,6 +1,6 @@
 import React from "react";
 
-import SOLog from "../../assets/img/SOLog.png";
+import SOLog from "/img/SOLog.png?url";
 
 export default function UpSideBar() {
   return (

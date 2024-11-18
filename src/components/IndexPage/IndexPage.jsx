@@ -1,7 +1,7 @@
 import React from "react";
-import SOLog from "../../../public/img/SOLog.png";
-import logotext from "../../../public/img/logotext.png";
-import shinhanfriends from "../../../public/img/shinhanfriends.png";
+import SOLog from "/img/SOLog.png?url";
+import logotext from "/img/logotext.png?url";
+import shinhanfriends from "/img/shinhanfriends.png?url";
 import Search from "../Search";
 import RecommendedStocks from "./RecommendedStocks";
 
