@@ -1,4 +1,4 @@
-import magnifier from "../../public/img/magnifier.png";
+import magnifier from "/img/magnifier.png?url";
 
 const Search = () => {
   return (
