@@ -3,6 +3,7 @@ import IndexPage from './components/IndexPage/IndexPage';
 import Search from './components/Search';
 
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { RouterProvider } from 'react-router-dom';
 
 import mainRouter from './routers/main-router';
