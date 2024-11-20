@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CompanyContext } from '../../App';
+import { CompanyContext } from '../../contexts/companyContext';
 
 const RecommendedStocks = () => {
   const { userInput, setUserInput } = useContext(CompanyContext);

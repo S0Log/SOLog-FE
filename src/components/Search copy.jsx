@@ -1,10 +1,9 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CompanyContext } from '../contexts/companyContext';
+import { CompanyContext } from '../App';
 import magnifier from '/img/magnifier.png?url';
-// import Hangul from 'hangul-js';
-// import { disassemble } from 'es-hangul';
-import * as hangul from 'hangul-js';
+import Hangul from 'hangul-js';
+import { disassemble } from 'es-hangul';
 
 const top50Companies = [
   '삼성전자',
@@ -61,21 +60,32 @@ const top50Companies = [
 
 const Search = () => {
   const { setUserInput } = useContext(CompanyContext);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(top50Companies); // 검색 결과
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const input = e.target.value;
+    const input = e.target.value; // 현재 입력값
     setUserInput(input);
 
-    const searcher = new hangul.Searcher(input);
+    // 입력값에 따라 필터링된 결과 업데이트
     const filtered = top50Companies.filter((item) => {
-      const groupedDisassembled = hangul.disassemble(item, true).map((char) => char[0]);
-      const jaum = groupedDisassembled.join('');
-      return searcher.search(item) === 0 || jaum.includes(input);
+      // 초성 및 완성형 검색
+      const itemInitials = Hangul.disassemble(item, true)
+        .map((char) => char[0])
+        .join('');
+      const inputInitials = Hangul.disassemble(input, true)
+        .map((char) => char[0])
+        .join('');
+      const itemDisassembled = disassemble(item).join('');
+      const inputDisassembled = disassemble(input).join('');
+
+      return (
+        itemDisassembled.includes(inputDisassembled) || // 완성형 매칭
+        itemInitials.includes(inputInitials) // 초성 매칭
+      );
     });
 
-    setResults(filtered);
+    setResults(filtered); // 결과 업데이트
   };
 
   const handleSearch = () => {
@@ -90,25 +100,25 @@ const Search = () => {
         <input
           type="text"
           placeholder="종목을 입력해주세요."
-          className="w-full py-3 pl-5 rounded-3xl placeholder-gray-400 focus:outline-none"
-          onChange={handleChange}
+          className="w-full py-3 pl-5 rounded-l-3xl placeholder-gray-400 focus:outline-none"
+          onChange={handleChange} // 입력값 변경 시 실행
           style={{
             boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
           }}
         />
         <button
           onClick={handleSearch}
-          className="absolute right-0 top-0 h-full rounded-r-3xl px-3 bg-white  flex items-center justify-center"
+          className="absolute right-0 top-0 h-full px-3 bg-white rounded-r-3xl flex items-center justify-center"
           style={{
             boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <img src={magnifier} alt="검색 아이콘" className="h-[80%]" />
+          <img src={magnifier} alt="검색 아이콘" className="h-full" />
         </button>
-
+        {/* 검색 결과 리스트 */}
         {results.length > 0 && (
           <ul
-            className="absolute left-0 w-full bg-white border-gray-300 rounded-md max-h-60 overflow-y-auto mt-2 z-10"
+            className="absolute left-0 w-full bg-white border border-gray-300 rounded-md max-h-60 overflow-y-auto mt-2 z-10"
             style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}
           >
             {results.map((company, index) => (
