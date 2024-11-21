@@ -16,8 +16,8 @@ export default function CompanyInfoPage() {
   };
 
   return (
-    <div className="w-[88vw] h-[90vh]">
-      <div className="w-full h-full px-[51.356px] py-10">
+    <div className="w-[88vw] h-[88vh]">
+      <div className="w-full h-full px-[51.356px] py-3">
         <div className="w-full h-full bg-white rounded-3xl flex flex-col">
           {/* 페이지 내용 */}
           <div className="flex-grow overflow-hidden px-7 py-3">
