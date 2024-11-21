@@ -5,7 +5,7 @@ export default function SideBar() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[12vw] h-full py-10">
+    <div className="w-[12vw] h-full py-3">
       <div className="w-full h-full flex flex-col items-center justify-start border-r-2 border-[#c5c6c7] py-3">
         <div
           onClick={() => {
