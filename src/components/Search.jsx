@@ -2,8 +2,6 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CompanyContext } from '../contexts/companyContext';
 import magnifier from '/img/magnifier.png?url';
-// import Hangul from 'hangul-js';
-// import { disassemble } from 'es-hangul';
 import * as hangul from 'hangul-js';
 
 const top50Companies = [
@@ -68,11 +66,21 @@ const Search = () => {
     const input = e.target.value;
     setUserInput(input);
 
+    if (input.trim() === '') {
+      setResults([]);
+      return;
+    }
+
     const searcher = new hangul.Searcher(input);
     const filtered = top50Companies.filter((item) => {
       const groupedDisassembled = hangul.disassemble(item, true).map((char) => char[0]);
       const jaum = groupedDisassembled.join('');
-      return searcher.search(item) === 0 || jaum.includes(input);
+
+      /**
+       * 기업명에 포함되거나 기업명의 초성에 포함되면 해당 기업명을 결과에 포함
+       * searcher.search(item) - 입력값이 포함된 위치(첫 인덱스)를 반환, ex. -1,0,2...
+       * jaum.includes(input) - 초성 문자열에 입력값이 포함되어 있는 지 여부를 반환 ex. true, false */
+      return searcher.search(item) >= 0 || jaum.includes(input);
     });
 
     setResults(filtered);
