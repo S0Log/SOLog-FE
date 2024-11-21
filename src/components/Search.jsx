@@ -111,21 +111,21 @@ const Search = () => {
             boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <img src={magnifier} alt="검색 아이콘" className="h-[70%]" />
+          <img src={magnifier} alt="검색 아이콘" className="h-[65%]" />
         </button>
 
         {results.length > 0 && (
           <ul
-            className="absolute left-0 w-full bg-white border-gray-300 rounded-md max-h-60 overflow-y-auto mt-2 z-10"
+            className="absolute left-0 w-full bg-white border-gray-300 rounded-3xl max-h-80 overflow-y-auto mt-2 z-10 scrollbar-hide pl-0"
             style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}
           >
             {results.map((company, index) => (
               <li
                 key={index}
-                className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                className="pl-5 py-3 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  setUserInput(company); // 선택 시 입력 필드에 반영
-                  setResults([]); // 선택 후 리스트 닫기
+                  setUserInput(company);
+                  setResults([]);
                 }}
               >
                 {company}
