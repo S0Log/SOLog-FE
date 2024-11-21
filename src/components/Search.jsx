@@ -111,7 +111,7 @@ const Search = () => {
             boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <img src={magnifier} alt="검색 아이콘" className="h-[80%]" />
+          <img src={magnifier} alt="검색 아이콘" className="h-[70%]" />
         </button>
 
         {results.length > 0 && (

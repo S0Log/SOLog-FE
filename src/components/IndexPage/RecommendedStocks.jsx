@@ -18,7 +18,7 @@ const RecommendedStocks = () => {
   };
   return (
     <div className="flex justify-center pt-7">
-      <ul className="flex space-x-4">
+      <ul className="flex space-x-4 pl-0">
         {[{ label: '추천종목', isHeader: true }, ...stocks.map((stock) => ({ label: stock }))].map(
           ({ label, isHeader }, index) => (
             <li
@@ -26,13 +26,17 @@ const RecommendedStocks = () => {
               className={`flex items-center justify-center ${
                 isHeader
                   ? 'font-extrabold text-lg'
-                  : 'font-base p-4 h-10 bg-white rounded-3xl text-sm shadow-md text-gray-800 hover:scale-105 transition-transform'
+                  : 'font-base p-3 h-10 bg-white rounded-3xl text-sm shadow-md text-gray-800 hover:scale-105 transition-transform'
               }`}
             >
               {isHeader ? (
                 label
               ) : (
-                <a onClick={() => handleSearch(label)} href={`#${label}`} className="block w-full text-center">
+                <a
+                  onClick={() => handleSearch(label)}
+                  href={`#${label}`}
+                  className="block w-full text-center text-gray-800 no-underline"
+                >
                   {label}
                 </a>
               )}
