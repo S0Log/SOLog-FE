@@ -4,13 +4,11 @@ import CardRight from './CardRight';
 
 export default function CompanyInfoPage2() {
   return (
-    <div className="container mx-auto space-y-4 h-full flex flex-row gap-4 bg-yellow-200">
-      <div className="flex-1">
-        <CardLeft />
-      </div>
-      <div className="flex-1">
-        <CardRight />
-      </div>
+    <div className="grid gap-7 md:grid-cols-2 h-full">
+      {/* Left Chart */}
+      <CardLeft />
+      {/* Right Chart */}
+      <CardRight />
     </div>
   );
 }

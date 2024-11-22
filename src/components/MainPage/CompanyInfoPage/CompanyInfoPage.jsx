@@ -16,15 +16,15 @@ export default function CompanyInfoPage() {
   };
 
   return (
-    <div className="w-[88vw] h-[90vh]">
-      <div className="w-full h-full px-[51.356px] py-10">
+    <div className="w-[88vw] h-[88vh]">
+      <div className="w-full h-full px-[51.356px] py-3">
         <div className="w-full h-full bg-white rounded-3xl flex flex-col">
           {/* 페이지 내용 */}
-          <div className="flex-grow overflow-hidden px-7 py-5">
+          <div className="flex-grow overflow-hidden px-7 py-3">
             {pageNum === 1 ? <CompanyInfoPage1 /> : pageNum === 2 ? <CompanyInfoPage2 /> : <CompanyInfoPage3 />}
           </div>
           {/* 이동 버튼과 페이지 표시기*/}
-          <div className="mt-auto flex items-center justify-between px-7 pb-5 relative">
+          <div className="mt-auto flex items-center justify-between px-7 pb-3 relative">
             {/* 왼쪽 버튼 */}
             {pageNum !== 1 ? (
               <button onClick={clickPrevBtn} className="w-10 h-10 p-2 border rounded-xl text-black border-gray-600">
