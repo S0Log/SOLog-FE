@@ -80,7 +80,7 @@ const Search = () => {
        * 기업명에 포함되거나 기업명의 초성에 포함되면 해당 기업명을 결과에 포함
        * searcher.search(item) - 입력값이 포함된 위치(첫 인덱스)를 반환, ex. -1,0,2...
        * jaum.includes(input) - 초성 문자열에 입력값이 포함되어 있는 지 여부를 반환 ex. true, false */
-      return searcher.search(item) >= 0 || jaum.includes(input);
+      return searcher.search(item) >= 0 || jaum.toLowerCase().includes(input.toLowerCase());
     });
 
     setResults(filtered);
