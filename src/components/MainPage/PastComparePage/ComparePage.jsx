@@ -23,7 +23,6 @@ const ComparePage = () => {
             &lt;
           </button>
           <div className="flex flex-col items-center justify-start h-full w-full">
-            {/* 조건부 렌더링 */}
             {isTrue ? (
               <div>Stock Chart Image</div>
             ) : (

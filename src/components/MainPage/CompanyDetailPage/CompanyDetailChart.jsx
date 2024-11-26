@@ -1,6 +1,4 @@
 import React from 'react';
-import Chart from '../Chart';
-import QuarterChart from './QuarterChart';
 
 export default function CompanyDetailChart() {
   return (

@@ -1,7 +1,6 @@
 import React from 'react';
 import Calendar from './Calendar';
 import TermSelect from './TermSelect';
-import MyChart from '../Chart';
 import PastArticle from './PastArticle';
 import PastCompareInfos from './PastCompareInfos';
 
