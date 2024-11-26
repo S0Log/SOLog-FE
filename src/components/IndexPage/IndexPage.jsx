@@ -1,9 +1,10 @@
-import React from "react";
-import SOLog from "/img/SOLog.png?url";
-import logotext from "/img/logotext.png?url";
-import shinhanfriends from "/img/shinhanfriends.png?url";
-import Search from "../Search";
-import RecommendedStocks from "./RecommendedStocks";
+import React from 'react';
+import SOLog from '/img/SOLog.png?url';
+import logotext from '/img/logotext.png?url';
+import shinhanfriends from '/img/shinhanfriends.png?url';
+import Search from '../Search';
+import RecommendedStocks from './RecommendedStocks';
+import { motion } from 'framer-motion';
 
 export default function IndexPage() {
   return (
@@ -13,8 +14,14 @@ export default function IndexPage() {
           <img src={SOLog} alt="SOLog" />
           <img src={logotext} alt="logotext" />
         </div>
-        <Search />
-        <RecommendedStocks />
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: 'spring', duration: 1 }}
+        >
+          <Search />
+          <RecommendedStocks />
+        </motion.div>
         <div className="flex justify-center mt-8">
           <img src={shinhanfriends} alt="shinhanfriends" />
         </div>
