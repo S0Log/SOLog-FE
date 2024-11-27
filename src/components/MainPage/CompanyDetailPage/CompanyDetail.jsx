@@ -8,8 +8,8 @@ const CompanyDetail = () => {
   const location = useLocation();
   const [tableData, setTableData] = useState([]); // 테이블 데이터 상태
   const [glossary, setGlossary] = useState({}); // 툴팁 데이터를 저장하는 상태
-  const { userInput } = useContext(CompanyContext); // 검색된 회사명
-
+  const queryParams = new URLSearchParams(location.search); // 쿼리 파라미터 읽기
+  const company = queryParams.get('company'); // 'label' 키의 값 가져오기
   // 요청할 항목 리스트
   const terms = [
     '시장 종류',
@@ -52,8 +52,9 @@ const CompanyDetail = () => {
   // 2. 회사 데이터를 가져오는 함수
   async function fetchCompanyInfo() {
     const url = '/api/companyInfo/detail';
+
     const params = {
-      companyName: userInput, // 검색된 회사명
+      companyName: company, // 검색된 회사명
       date: '2024-08-20', // 현재 날짜
     };
 
@@ -158,11 +159,13 @@ const CompanyDetail = () => {
   useEffect(() => {
     async function loadData() {
       await fetchGlossaryTerms(); // 툴팁 데이터 로드
-      // console.log('jiwon', glossary);
+      console.log('jiwon', glossary);
       // fetchCompanyInfo(); // glossary 로드 후 회사 데이터 로드
     }
 
-    if (location.pathname === '/main/companyDetail') {
+    console.log(location.pathname);
+    if (location.pathname === '/main/CompanyDetail' && company) {
+      console.log('sdfsdfsdfsdf');
       loadData();
     }
   }, [location]); // pathname 변경 시 데이터 로드

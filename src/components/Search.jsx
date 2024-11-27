@@ -88,7 +88,7 @@ const Search = () => {
 
   const handleSearch = () => {
     if (results.length > 0) {
-      navigate('/main/analyzeChart');
+      navigate('/main/CompanyDetail');
     }
   };
 

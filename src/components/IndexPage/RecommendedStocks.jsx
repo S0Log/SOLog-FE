@@ -13,7 +13,7 @@ const RecommendedStocks = () => {
 
     console.log(stock);
     if (userInput.trim) {
-      navigate('/main/analyzeChart');
+      navigate(`/main/CompanyDetail?company=${stock}`);
     }
   };
   return (
@@ -32,11 +32,7 @@ const RecommendedStocks = () => {
               {isHeader ? (
                 label
               ) : (
-                <a
-                  onClick={() => handleSearch(label)}
-                  href={`#${label}`}
-                  className="block w-full text-center text-gray-800 no-underline"
-                >
+                <a onClick={() => handleSearch(label)} className="block w-full text-center text-gray-800 no-underline">
                   {label}
                 </a>
               )}
