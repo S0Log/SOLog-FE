@@ -3,46 +3,57 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # main 브랜치에 push될 때 트리거
+      - main  # 배포할 브랜치
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2  # 레포지토리 코드를 체크아웃
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      
-    - name: Log in to Docker Hub
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+      # 코드 체크아웃
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKER_IMAGE_NAME }} .
-        # sudo docker push ${{ secrets.DOCKER_IMAGE_NAME }}
-        sudo docker push docker.io/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
+      # Docker 설치 (필요한 경우에만)
+      - name: Set up Docker
+        run: |
+          # Docker 설치 (GitHub Actions의 ubuntu-latest 환경에는 기본적으로 Docker가 설치되어 있음)
+          if ! command -v docker &> /dev/null; then
+            echo "Docker가 설치되어 있지 않습니다. 설치 중..."
+            sudo apt-get update
+            sudo apt-get install -y docker.io
+            sudo systemctl start docker
+            sudo systemctl enable docker
+          else
+            echo "Docker가 이미 설치되어 있습니다."
+          fi
+
+      # Docker 이미지 빌드
+      - name: Build Docker image for frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest .
+
+      # Docker Hub에 푸시
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
     
-    - name: SSH into EC2 and deploy
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_KEY }}
-        port: 22
-        script: |
-          # backend_network가 없으면 생성
-          docker network ls | grep backend_network || docker network create backend_network
-          
-          # 최신 이미지를 pull하고 기존 컨테이너를 중단 및 삭제 후 새로 시작
-          docker pull ${{ secrets.DOCKER_IMAGE_NAME }}
-          docker stop my-app || true
-          docker rm my-app || true
-          
-          # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
-          docker run -d --name my-app --network backend_network -p 80:80 ${{ secrets.DOCKER_IMAGE_NAME }}
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          script: |
+            # backend_network가 없으면 생성
+            docker network ls | grep backend_network || docker network create backend_network
+            
+            # 최신 이미지를 pull하고 기존 컨테이너를 중단 및 삭제 후 새로 시작
+            docker pull ${{ secrets.DOCKER_IMAGE_NAME }}
+            docker stop my-app || true
+            docker rm my-app || true
+            
+            # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
+            docker run -d --name my-app --network backend_network -p 80:80 ${{ secrets.DOCKER_IMAGE_NAME }}
