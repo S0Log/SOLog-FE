@@ -31,13 +31,13 @@ const CompanyDetail = () => {
 
   return (
     <div className="mt-0 ml-14 mr-14 mb-2">
-      <table className="table border border-gray-300 rounded-2xl overflow-hidden">
+      <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
         <tbody className="border border-gray-600">
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
                 <React.Fragment key={colIndex}>
-                  <td className="!text-gray-500 font-extrabold p-3 text-[0.8em]" scope="col">
+                  <td className="!text-gray-500 font-bold p-3 text-[0.9em]" scope="col">
                     <OverlayTrigger
                       delay={{ show: 250, hide: 400 }}
                       placement="bottom"
@@ -46,7 +46,7 @@ const CompanyDetail = () => {
                       <span>{col.label}</span>
                     </OverlayTrigger>
                   </td>
-                  <th className="p-3 font-medium" scope="col">
+                  <th className="p-3 font-medium text-[1em]" scope="col">
                     {col.value}
                   </th>
                 </React.Fragment>

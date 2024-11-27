@@ -8,8 +8,6 @@ import CompanyDetailPage from '../components/MainPage/CompanyDetailPage/CompanyD
 import CompanyInfoPage from '../components/MainPage/CompanyInfoPage/CompanyInfoPage';
 import PastComparePage from '../components/MainPage/PastComparePage/PastComparePage';
 
-import Test from '../components/Test/Test';
-
 const router = createBrowserRouter(
   [
     {
@@ -26,10 +24,6 @@ const router = createBrowserRouter(
         { path: 'pastCompare', element: <PastComparePage /> },
         { path: 'companyInfo', element: <CompanyInfoPage /> },
       ],
-    },
-    {
-      path: '/test',
-      element: <Test />,
     },
   ],
   {
