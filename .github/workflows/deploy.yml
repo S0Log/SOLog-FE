@@ -1,0 +1,60 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - develop  # 배포할 브랜치
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 코드 체크아웃
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Docker 설치 (필요한 경우에만)
+      - name: Set up Docker
+        run: |
+          # Docker 설치 (GitHub Actions의 ubuntu-latest 환경에는 기본적으로 Docker가 설치되어 있음)
+          if ! command -v docker &> /dev/null; then
+            echo "Docker가 설치되어 있지 않습니다. 설치 중..."
+            sudo apt-get update
+            sudo apt-get install -y docker.io
+            sudo systemctl start docker
+            sudo systemctl enable docker
+          else
+            echo "Docker가 이미 설치되어 있습니다."
+          fi
+
+      # Docker 이미지 빌드
+      - name: Build Docker image for frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest .
+
+      # Docker Hub에 푸시
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
+
+      # 서버에 배포 명령어 실행
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          script: |
+            # backend_network가 없으면 생성
+            docker network ls | grep backend_network || docker network create backend_network
+            
+            # 최신 이미지를 pull하고 기존 컨테이너를 중단 및 삭제 후 새로 시작
+            docker pull ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
+            docker stop solog_fe || true
+            docker rm solog_fe || true
+            
+            # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
+            docker run -d --name solog_fe --network backend_network -p 80:80 ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
