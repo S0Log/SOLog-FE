@@ -57,4 +57,4 @@ jobs:
             docker rm solog_fe || true
             
             # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
-            docker run -d --name solog_fe --network backend_network -p 80:80 ${{ secrets.DOCKER_USER_NAME }}/solog_fe:latest
+            docker run -d --name solog_fe --network backend_network -p 80:80 ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
