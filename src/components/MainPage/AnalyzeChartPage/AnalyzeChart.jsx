@@ -105,7 +105,7 @@ export default function AnalyzeChart({ isBarClick, setIsBarClick }) {
   }, []);
 
   const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date));
-  const margin = { left: 48, right: 48, top: 24, bottom: 48 };
+  const margin = { left: 12, right: 72, top: 24, bottom: 24 };
 
   const ema12 = ema()
     .id(1)

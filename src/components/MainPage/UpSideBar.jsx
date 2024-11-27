@@ -19,7 +19,7 @@ export default function UpSideBar() {
           }}
         />
       </div>
-      <div>
+      <div className=" px-[51.356px]">
         <Search />
       </div>
     </div>
