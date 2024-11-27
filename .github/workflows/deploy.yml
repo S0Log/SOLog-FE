@@ -53,8 +53,8 @@ jobs:
             
             # 최신 이미지를 pull하고 기존 컨테이너를 중단 및 삭제 후 새로 시작
             docker pull ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
-            docker stop my-app || true
-            docker rm my-app || true
+            docker stop solog_fe || true
+            docker rm solog_fe || true
             
             # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
-            docker run -d --name my-app --network backend_network -p 80:80 ${{ secrets.DOCKER_IMAGE_NAME }}/solog_fe:latest
+            docker run -d --name solog_fe --network backend_network -p 80:80 ${{ secrets.DOCKER_USER_NAME }}/solog_fe:latest
