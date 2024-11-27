@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import tailwindScrollbarHide from 'tailwind-scrollbar-hide';
+export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'], // Tailwind가 스타일을 적용할 파일 경로
   theme: {
     extend: {
@@ -15,5 +16,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwind-scrollbar-hide')],
+  plugins: [tailwindScrollbarHide],
 };
