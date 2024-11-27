@@ -1,34 +1,181 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { CompanyContext } from '../../../contexts/companyContext';
 
 const CompanyDetail = () => {
-  const tableData = [
-    [
-      { label: '시가총액', value: '581,000', tooltip: '기업의 총 가치를 나타내는 지표' },
-      { label: '표준업종분류코드', value: '1', tooltip: '업종을 분류하는 코드' },
-      { label: '자본금', value: '641,000', tooltip: '기업이 처음에 설립할 때 자본금' },
-      { label: '상장일', value: '594,000', tooltip: '기업이 증권 거래소에 상장된 날짜' },
-    ],
-    [
-      { label: '매출액', value: '212,699', tooltip: '기업이 일정 기간 동안 발생한 총 수입' },
-      { label: '영업이익', value: '103,100', tooltip: '기업의 핵심 영업 활동으로부터 발생한 이익' },
-      { label: '당기순이익', value: '4조 5,424억', tooltip: '세금과 비용을 제외한 순수 이익' },
-      { label: '주당 배당금', value: '13.13%', tooltip: '주식 1주당 지급되는 배당금 비율' },
-    ],
-    [
-      { label: '분기 최고가', value: '31,068원', tooltip: '분기 동안의 최고 주가' },
-      { label: '분기 최저가', value: '26.65배', tooltip: '분기 동안의 최저 주가' },
-      { label: 'PER', value: '22,627원', tooltip: '주가수익비율 (Price to Earnings Ratio)' },
-      { label: 'ROE', value: '19.41배', tooltip: '자기자본이익률 (Return on Equity)' },
-    ],
-    [
-      { label: 'PBR', value: '2,100원', tooltip: '주가순자산비율 (Price to Book Ratio)' },
-      { label: 'EPS', value: '7.21배', tooltip: '주당순이익 (Earnings Per Share)' },
-      { label: 'BPS', value: '83,636원', tooltip: '주당순자산 (Book Value Per Share)' },
-      { label: 'ROA', value: '2,100원', tooltip: '자산이익률 (Return on Assets)' },
-    ],
+  const location = useLocation();
+  const [tableData, setTableData] = useState([]); // 테이블 데이터 상태
+  const [glossary, setGlossary] = useState({}); // 툴팁 데이터를 저장하는 상태
+  const { userInput } = useContext(CompanyContext); // 검색된 회사명
+
+  // 요청할 항목 리스트
+  const terms = [
+    '시장 종류',
+    '상장일',
+    '자본금',
+    '매출액',
+    '매출액증가율',
+    '영업이익',
+    '당기순이익',
+    '부채총계',
+    '분기 최고가',
+    '분기 최저가',
+    'PER',
+    'ROE',
+    'PBR',
+    'EPS',
+    'BPS',
+    'ROA',
   ];
 
+  // 1. 모든 용어의 툴팁 데이터를 가져오는 함수
+  async function fetchGlossaryTerms() {
+    const glossaryData = {}; // 각 term에 대한 데이터를 저장
+    try {
+      // 모든 term을 병렬로 요청
+      await Promise.all(
+        terms.map(async (term) => {
+          const response = await axios.get(`/api/glossary/${term}`);
+          glossaryData[term] = response.data.definition;
+          // console.log('**', response.data.definition);
+        }),
+      );
+      console.log('jw,', glossaryData);
+      setGlossary(glossaryData); // 상태 업데이트
+    } catch (error) {
+      console.error('Error fetching glossary terms:', error);
+    }
+  }
+
+  // 2. 회사 데이터를 가져오는 함수
+  async function fetchCompanyInfo() {
+    const url = '/api/companyInfo/detail';
+    const params = {
+      companyName: userInput, // 검색된 회사명
+      date: '2024-08-20', // 현재 날짜
+    };
+
+    try {
+      const res = await axios.get(url, { params });
+      const data = res.data;
+      console.log(data);
+
+      // glossary와 데이터를 연결하여 테이블 데이터 생성
+      const updatedTableData = [
+        [
+          { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
+          { label: '상장일', value: data.listedDate?.split('T')[0] ?? '-', tooltip: glossary['상장일'] ?? '****' },
+          {
+            label: '자본금',
+            value: data.capitalAmount
+              ? `${Math.floor(data.capitalAmount / 1_000_000).toLocaleString()} (백만 원)`
+              : '-',
+            tooltip: glossary['자본금'] ?? '',
+          },
+          {
+            label: '매출액',
+            value: data.revenue ? `${Math.floor(data.revenue).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['매출액'] ?? '',
+          },
+        ],
+        [
+          {
+            label: '매출액증가율',
+            value: data.revenueGrowthRate ? `${Math.floor(data.revenueGrowthRate)} (%)` : '-',
+            tooltip: glossary['매출액증가율'] ?? '',
+          },
+          {
+            label: '영업이익',
+            value: data.operIncome ? `${Math.floor(data.operIncome).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['영업이익'] ?? '',
+          },
+          {
+            label: '당기순이익',
+            value: data.netIncome ? `${Math.floor(data.netIncome).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['당기순이익'] ?? '',
+          },
+          {
+            label: '부채총계',
+            value: data.totalLiabilities ? `${Math.floor(data.totalLiabilities).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['부채총계'] ?? '',
+          },
+        ],
+        [
+          {
+            label: '분기 최고가',
+            value: data.quarterlyHigh ? `${Math.floor(data.quarterlyHigh).toLocaleString()} (원)` : '-',
+            tooltip: glossary['분기 최고가'] ?? '',
+          },
+          {
+            label: '분기 최저가',
+            value: data.quarterlyLow ? `${Math.floor(data.quarterlyLow).toLocaleString()} (원)` : '-',
+            tooltip: glossary['분기 최저가'] ?? '',
+          },
+          {
+            label: 'PER',
+            value: data.per ? `${Math.floor(data.per)} (배)` : '-',
+            tooltip: glossary['PER'] ?? '',
+          },
+          {
+            label: 'ROE',
+            value: data.roe ? `${Math.floor(data.roe)} (%)` : '-',
+            tooltip: glossary['ROE'] ?? '',
+          },
+        ],
+        [
+          {
+            label: 'PBR',
+            value: data.pbr ? `${Math.floor(data.pbr)} (배)` : '-',
+            tooltip: glossary['PBR'] ?? '',
+          },
+          {
+            label: 'EPS',
+            value: data.eps ? `${Math.floor(data.eps).toLocaleString()} (원)` : '-',
+            tooltip: glossary['EPS'] ?? '',
+          },
+          {
+            label: 'BPS',
+            value: data.bps ? `${Math.floor(data.bps).toLocaleString()} (원)` : '-',
+            tooltip: glossary['BPS'] ?? '',
+          },
+          {
+            label: 'ROA',
+            value: data.roa ? `${Math.floor(data.roa)} (%)` : '-',
+            tooltip: glossary['ROA'] ?? '',
+          },
+        ],
+      ];
+
+      setTableData(updatedTableData); // 상태 업데이트
+    } catch (error) {
+      console.error('Error fetching company info:', error);
+    }
+  }
+
+  // 3. 데이터 로드 및 의존성 관리
+  useEffect(() => {
+    async function loadData() {
+      await fetchGlossaryTerms(); // 툴팁 데이터 로드
+      // console.log('jiwon', glossary);
+      // fetchCompanyInfo(); // glossary 로드 후 회사 데이터 로드
+    }
+
+    if (location.pathname === '/main/companyDetail') {
+      loadData();
+    }
+  }, [location]); // pathname 변경 시 데이터 로드
+
+  //fetchGlossaryTerms 함수를 실행하고 나서 fetchCompanyInfo를 수행한다
+  useEffect(() => {
+    // glossary가 변경되면 fetchCompanyInfo를 실행
+    if (Object.keys(glossary).length > 0) {
+      console.log('Updated glossary:', glossary);
+      fetchCompanyInfo();
+    }
+  }, [glossary]);
+  // 4. 테이블 렌더링
   return (
     <div className="mt-0 ml-14 mr-14 mb-2">
       <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
@@ -46,7 +193,7 @@ const CompanyDetail = () => {
                       <span>{col.label}</span>
                     </OverlayTrigger>
                   </td>
-                  <th className="p-3 font-medium text-[1em]" scope="col">
+                  <th className="p-3 font-medium text-[0.8em]" scope="col">
                     {col.value}
                   </th>
                 </React.Fragment>
