@@ -10,7 +10,7 @@ export default function AnalyzeChartPage() {
 
   return (
     <div className="flex justify-between w-[88vw] h-[88vh] px-[51.356px] py-3 gap-3">
-      <div className="w-3/5 h-full bg-white rounded-md shadow-md flex flex-col">
+      <div className="w-3/5 h-full bg-white rounded-3xl shadow-md flex flex-col">
         <div className="w-full flex-[1] p-2">
           <DurationSelectBar />
         </div>
