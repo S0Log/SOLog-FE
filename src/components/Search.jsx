@@ -58,11 +58,13 @@ const top50Companies = [
 ];
 
 const Search = () => {
-  const { setUserInput } = useContext(CompanyContext);
+  const { setUserInputCompany } = useContext(CompanyContext);
+  const [userInput, setUserInput] = useState('');
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    console.log(e.target.value);
     const input = e.target.value;
     setUserInput(input);
 
@@ -87,29 +89,30 @@ const Search = () => {
   };
 
   const handleSearch = () => {
-    if (results.length > 0) {
-      navigate('/main/CompanyDetail');
+    if (top50Companies.includes(userInput)) {
+      setUserInputCompany(userInput);
+      navigate('/main/analyzeChart');
+    } else if (userInput !== '' && !top50Companies.includes(userInput)) {
+      alert('해당 기업에 대한 정보를 제공하지 않습니다. 다른 기업으로 검색해주세요.');
     }
   };
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-[55%]">
+      <div className="relative w-[35vw] px-[51.356px] bg-white rounded-3xl py-3 pl-5 shadow-md">
         <input
           type="text"
           placeholder="종목을 입력해주세요."
-          className="w-full py-3 pl-5 rounded-3xl placeholder-gray-400 focus:outline-none"
+          className="w-full  placeholder-gray-400 focus:outline-none"
           onChange={handleChange}
-          style={{
-            boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
+          value={userInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch();
           }}
         />
         <button
           onClick={handleSearch}
           className="absolute right-0 top-0 h-full rounded-r-3xl px-3 bg-white  flex items-center justify-center"
-          style={{
-            boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
-          }}
         >
           <img src={magnifier} alt="검색 아이콘" className="h-[65%]" />
         </button>

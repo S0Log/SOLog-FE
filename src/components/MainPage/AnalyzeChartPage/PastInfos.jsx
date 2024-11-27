@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import DonutChart from './DonutChart';
 
 export default function PastInfos(isBarClick) {
   const [articles, setArticles] = useState([]);
