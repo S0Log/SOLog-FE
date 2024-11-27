@@ -38,7 +38,8 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
-    
+
+      # 서버에 배포 명령어 실행
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -51,9 +52,9 @@ jobs:
             docker network ls | grep backend_network || docker network create backend_network
             
             # 최신 이미지를 pull하고 기존 컨테이너를 중단 및 삭제 후 새로 시작
-            docker pull ${{ secrets.DOCKER_IMAGE_NAME }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/solog_fe:latest
             docker stop my-app || true
             docker rm my-app || true
             
             # 프론트엔드 컨테이너를 backend_network에 연결하여 실행
-            docker run -d --name my-app --network backend_network -p 80:80 ${{ secrets.DOCKER_IMAGE_NAME }}
+            docker run -d --name my-app --network backend_network -p 80:80 ${{ secrets.DOCKER_IMAGE_NAME }}/solog_fe:latest
