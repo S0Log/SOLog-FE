@@ -5,14 +5,13 @@ export default function CardRight() {
 
   // API 요청 후 데이터 설정
   useEffect(() => {
-    fetch("http://localhost:8080/api/companyInfo/삼성전자/marketShare")
+    fetch('http://localhost:8080/api/companyInfo/삼성전자/marketShare')
       .then((response) => response.json())
       .then((data) => setMarketShareData(data))
-      .catch((error) => console.error("Error fetching data: ", error));
+      .catch((error) => console.error('Error fetching data: ', error));
   }, []);
 
   return (
-    
     <div className="h-full">
       {/* 전체 제목 */}
       <div className="flex items-center justify-between border-y p-2 mb-4 bg-[#f6f7f9]">
@@ -32,7 +31,7 @@ export default function CardRight() {
                 left: `${index * 100 + 40}px`,
                 height: `${parseFloat(data.sharePercent)}%`, // 비율에 맞게 높이 설정
                 backgroundColor: `rgba(${(index * 50) % 255}, ${(index * 100) % 255}, ${(index * 150) % 255}, 0.7)`, // 색상 설정
-                marginBottom: "2px",
+                marginBottom: '2px',
               }}
             >
               {/* <span className="text-center text-white">{data.mainProduct}</span> */}
@@ -40,7 +39,7 @@ export default function CardRight() {
           ))}
         </div>
       </div>
-      
+
       {/* Table */}
       <table className="w-full mt-4 border">
         <thead>
@@ -58,8 +57,6 @@ export default function CardRight() {
           ))}
         </tbody>
       </table>
-
-      
     </div>
   );
   // const marketShareData = [

@@ -1,11 +1,11 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // 이 줄을 추가하세요
 export default function CompanyIntro() {
   const Card = ({ children, className = '' }) => (
     <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>
   );
-  const [companyOverview,setCompanyOverview] = useState([]);
-  const [companyOverviewDate,setCompanyOverviewDate] = useState();
+  const [companyOverview, setCompanyOverview] = useState([]);
+  const [companyOverviewDate, setCompanyOverviewDate] = useState();
   useEffect(() => {
     const getData = async () => {
       const url = '/api/companyInfo/삼성전자/companyOverview';
@@ -32,12 +32,10 @@ export default function CompanyIntro() {
             <span className="text-sm text-muted-foreground">기준: {companyOverviewDate}</span>
           </div>
           <ul className="space-y-3 text-sm leading-relaxed">
-            {companyOverview.map((item, index) => (
+            {companyOverview.map((item, index) =>
               // 마지막 항목을 제외하고 li를 렌더링
-              index < companyOverview.length - 1 ? (
-                <li key={index}>• {item.trim()}</li>
-              ) : null
-            ))}
+              index < companyOverview.length - 1 ? <li key={index}>• {item.trim()}</li> : null,
+            )}
           </ul>
         </div>
       </Card>
