@@ -6,11 +6,10 @@ import { CompanyContext } from '../../../contexts/CompanyContext';
 
 const CompanyDetail = () => {
   const location = useLocation();
-  const [tableData, setTableData] = useState([]); // 테이블 데이터 상태
-  const [glossary, setGlossary] = useState({}); // 툴팁 데이터를 저장하는 상태
+  const [tableData, setTableData] = useState([]);
+  const [glossary, setGlossary] = useState({});
   const { userInputCompany } = useContext(CompanyContext);
 
-  // 요청할 항목 리스트
   const terms = [
     '시장 종류',
     '상장일',
@@ -30,44 +29,35 @@ const CompanyDetail = () => {
     'ROA',
   ];
 
-  // 1. 모든 용어의 툴팁 데이터를 가져오는 함수
   async function fetchGlossaryTerms() {
-    const glossaryData = {}; // 각 term에 대한 데이터를 저장
+    const glossaryData = {};
     try {
-      // 모든 term을 병렬로 요청
       await Promise.all(
         terms.map(async (term) => {
           const response = await axios.get(`/api/glossary/${term}`);
           glossaryData[term] = response.data.definition;
-          // console.log('**', response.data.definition);
         }),
       );
-
-      setGlossary(glossaryData); // 상태 업데이트
+      setGlossary(glossaryData);
     } catch (error) {
       console.error('Error fetching glossary terms:', error);
     }
   }
 
-  // 2. 회사 데이터를 가져오는 함수
   async function fetchCompanyInfo() {
     const url = '/api/companyInfo/detail';
-
     const params = {
-      companyName: userInputCompany, // 검색된 회사명
-      date: '2024-08-20', // 현재 날짜
+      companyName: userInputCompany,
+      date: '2024-08-20',
     };
 
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
-      console.log(data);
-
-      // glossary와 데이터를 연결하여 테이블 데이터 생성
       const updatedTableData = [
         [
           { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
-          { label: '상장일', value: data.listedDate?.split('T')[0] ?? '-', tooltip: glossary['상장일'] ?? '****' },
+          { label: '상장일', value: data.listedDate?.split('T')[0] ?? '-', tooltip: glossary['상장일'] ?? '' },
           {
             label: '자본금',
             value: data.capitalAmount
@@ -148,37 +138,28 @@ const CompanyDetail = () => {
           },
         ],
       ];
-
-      setTableData(updatedTableData); // 상태 업데이트
+      setTableData(updatedTableData);
     } catch (error) {
       console.error('Error fetching company info:', error);
     }
   }
 
-  // 3. 데이터 로드 및 의존성 관리
   useEffect(() => {
     async function loadData() {
-      await fetchGlossaryTerms(); // 툴팁 데이터 로드
-      console.log('jiwon', glossary);
-      // fetchCompanyInfo(); // glossary 로드 후 회사 데이터 로드
+      await fetchGlossaryTerms();
     }
 
-    console.log(location.pathname);
     if (location.pathname === '/main/companyDetail') {
-      console.log('sdfsdfsdfsdf');
       loadData();
     }
-  }, [location]); // pathname 변경 시 데이터 로드
+  }, [location]);
 
-  //fetchGlossaryTerms 함수를 실행하고 나서 fetchCompanyInfo를 수행한다
   useEffect(() => {
-    // glossary가 변경되면 fetchCompanyInfo를 실행
     if (Object.keys(glossary).length > 0) {
-      console.log('Updated glossary:', glossary);
       fetchCompanyInfo();
     }
   }, [glossary]);
-  // 4. 테이블 렌더링
+
   return (
     <div className="mt-0 ml-14 mr-14 mb-2">
       <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
@@ -187,7 +168,7 @@ const CompanyDetail = () => {
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
                 <React.Fragment key={colIndex}>
-                  <td className="!text-gray-500 font-bold p-3 text-[0.9em]" scope="col">
+                  <td className="border-none !text-gray-500 font-bold p-3 text-[0.9em]" scope="col">
                     <OverlayTrigger
                       delay={{ show: 250, hide: 400 }}
                       placement="bottom"
@@ -196,7 +177,7 @@ const CompanyDetail = () => {
                       <span>{col.label}</span>
                     </OverlayTrigger>
                   </td>
-                  <th className="p-3 font-medium text-[0.8em]" scope="col">
+                  <th className="border-none p-3 font-medium text-[0.8em]" scope="col">
                     {col.value}
                   </th>
                 </React.Fragment>
