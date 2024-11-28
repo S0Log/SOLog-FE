@@ -1,7 +1,6 @@
 // import React from 'react';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 export default function CardLeft() {
-  
   const [stackedData, setStackedData] = useState([]);
   const [productNames, setProductNames] = useState([]);
 
@@ -9,7 +8,7 @@ export default function CardLeft() {
     // Fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/companyInfo/삼성전자/salesTrendRatio");
+        const response = await fetch('http://localhost:8080/api/companyInfo/삼성전자/salesTrendRatio');
         const data = await response.json();
 
         // Extract unique product names
@@ -17,7 +16,7 @@ export default function CardLeft() {
         setProductNames(uniqueProductNames);
 
         // Extract unique years
-        const years = [...new Set(data.map((item) => item.salesTrendRatioDate.split("-")[0]))];
+        const years = [...new Set(data.map((item) => item.salesTrendRatioDate.split('-')[0]))];
 
         // Create a structured format for stackedData
         const processedData = years.map((year) => {
@@ -34,7 +33,7 @@ export default function CardLeft() {
 
         setStackedData(processedData);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error('Failed to fetch data:', error);
       }
     };
 
@@ -50,7 +49,7 @@ export default function CardLeft() {
         </div>
         <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
-  
+
       {/* 그래프 */}
       <div className="h-[200px] w-full mt-6">
         <div className="relative h-full w-full">
@@ -68,7 +67,7 @@ export default function CardLeft() {
                   style={{
                     height: `${(data[name] || 0) * 0.7}%`, // Y축 비율로 차트 높이 설정
                     backgroundColor: `rgba(${(idx * 50) % 255}, ${(idx * 100) % 255}, ${(idx * 150) % 255}, 0.7)`, // 색상 설정
-                    marginBottom: "2px",
+                    marginBottom: '2px',
                   }}
                 ></div>
               ))}
@@ -76,20 +75,16 @@ export default function CardLeft() {
           ))}
         </div>
       </div>
-  
+
       {/* Table */}
-      <table className="w-full mt-4 border" style={{ tableLayout: "fixed" }}>
+      <table className="w-full mt-4 border" style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr className="bg-gray-100">
-            <th className="px-2 py-2 text-left" style={{ width: "32%" }}>
+            <th className="px-2 py-2 text-left" style={{ width: '32%' }}>
               제품명
             </th>
             {stackedData.map((data) => (
-              <th
-                key={data.year}
-                className="px-2 py-2 text-left"
-                style={{ width: `${68 / stackedData.length}%` }}
-              >
+              <th key={data.year} className="px-2 py-2 text-left" style={{ width: `${68 / stackedData.length}%` }}>
                 {data.year}
               </th>
             ))}
@@ -98,16 +93,12 @@ export default function CardLeft() {
         <tbody>
           {productNames.map((name) => (
             <tr key={name} className="border-b">
-              <td className="px-2 py-2" style={{ width: "32%" }}>
+              <td className="px-2 py-2" style={{ width: '32%' }}>
                 {name}
               </td>
               {stackedData.map((data) => (
-                <td
-                  key={data.year}
-                  className="px-2 py-2"
-                  style={{ width: `${68 / stackedData.length}%` }}
-                >
-                  {data[name]?.toFixed(2) || "0.00"}
+                <td key={data.year} className="px-2 py-2" style={{ width: `${68 / stackedData.length}%` }}>
+                  {data[name]?.toFixed(2) || '0.00'}
                 </td>
               ))}
             </tr>
@@ -116,8 +107,7 @@ export default function CardLeft() {
       </table>
     </div>
   );
-  
-  
+
   // return (
   //   <div className="h-full">
   //     {/* 전체 제목 */}
