@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
 
 const CompanyDetail = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const CompanyDetail = () => {
     'ROA',
   ];
 
+  // 용어 정의 가져오기
   async function fetchGlossaryTerms() {
     const glossaryData = {};
     try {
@@ -44,16 +46,17 @@ const CompanyDetail = () => {
     }
   }
 
+  // 회사 정보 가져오기
   async function fetchCompanyInfo() {
     const url = '/api/companyInfo/detail';
     const params = {
       companyName: userInputCompany,
-      date: '2024-08-20',
+      date: new Date(),
     };
-
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
+
       const updatedTableData = [
         [
           { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
@@ -148,7 +151,6 @@ const CompanyDetail = () => {
     async function loadData() {
       await fetchGlossaryTerms();
     }
-
     if (location.pathname === '/main/companyDetail') {
       loadData();
     }
@@ -167,19 +169,14 @@ const CompanyDetail = () => {
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
-                <React.Fragment key={colIndex}>
-                  <td className="border-none !text-gray-500 font-bold p-3 text-[0.9em]" scope="col">
-                    <OverlayTrigger
-                      delay={{ show: 250, hide: 400 }}
-                      placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${colIndex}`}>{col.tooltip}</Tooltip>}
-                    >
+                <React.Fragment key={`${rowIndex}-${colIndex}`}>
+                  <td className="border-none !text-gray-700 font-bold p-3 text-[0.9em]">
+                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-content={col.tooltip}>
                       <span>{col.label}</span>
-                    </OverlayTrigger>
+                    </a>
+                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
                   </td>
-                  <th className="border-none p-3 font-medium text-[0.8em]" scope="col">
-                    {col.value}
-                  </th>
+                  <td className="border-none p-3 !text-gray-800 font-medium text-[0.8em]">{col.value}</td>
                 </React.Fragment>
               ))}
             </tr>
