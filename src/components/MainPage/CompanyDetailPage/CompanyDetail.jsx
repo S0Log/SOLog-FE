@@ -2,14 +2,14 @@ import React, { useEffect, useState, useContext } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import { CompanyContext } from '../../../contexts/companyContext';
+import { CompanyContext } from '../../../contexts/CompanyContext';
 
 const CompanyDetail = () => {
   const location = useLocation();
   const [tableData, setTableData] = useState([]); // 테이블 데이터 상태
   const [glossary, setGlossary] = useState({}); // 툴팁 데이터를 저장하는 상태
-  const queryParams = new URLSearchParams(location.search); // 쿼리 파라미터 읽기
-  const company = queryParams.get('company'); // 'label' 키의 값 가져오기
+  const { userInputCompany } = useContext(CompanyContext);
+
   // 요청할 항목 리스트
   const terms = [
     '시장 종류',
@@ -42,7 +42,7 @@ const CompanyDetail = () => {
           // console.log('**', response.data.definition);
         }),
       );
-      console.log('jw,', glossaryData);
+
       setGlossary(glossaryData); // 상태 업데이트
     } catch (error) {
       console.error('Error fetching glossary terms:', error);
@@ -54,7 +54,7 @@ const CompanyDetail = () => {
     const url = '/api/companyInfo/detail';
 
     const params = {
-      companyName: company, // 검색된 회사명
+      companyName: userInputCompany, // 검색된 회사명
       date: '2024-08-20', // 현재 날짜
     };
 
@@ -164,7 +164,7 @@ const CompanyDetail = () => {
     }
 
     console.log(location.pathname);
-    if (location.pathname === '/main/CompanyDetail' && company) {
+    if (location.pathname === '/main/companyDetail') {
       console.log('sdfsdfsdfsdf');
       loadData();
     }
