@@ -30,7 +30,11 @@ const RecommendedStocks = () => {
               {isHeader ? (
                 label
               ) : (
-                <a onClick={() => handleSearch(label)} className="block w-full text-center text-gray-800 no-underline">
+                <a
+                  href=""
+                  onClick={() => handleSearch(label)}
+                  className="block w-full text-center text-gray-800 no-underline"
+                >
                   {label}
                 </a>
               )}
