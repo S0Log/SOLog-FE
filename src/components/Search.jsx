@@ -88,7 +88,7 @@ const Search = () => {
   };
 
   const handleSearch = () => {
-    if (top50Companies.includes(userInput)) {
+    if (top50Companies.includes(userInputCompany)) {
       setUserInputCompany(userInputCompany);
       navigate(`/main/companyInfo`);
     } else if (userInputCompany !== '' && !top50Companies.includes(userInputCompany)) {
