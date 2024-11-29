@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
 
 export default function CardRight() {
   const [marketShareData, setMarketShareData] = useState([]);
+  const { userInputCompany } = useContext(CompanyContext);
 
   // API 요청 후 데이터 설정
   useEffect(() => {
-    fetch('http://localhost:8080/api/companyInfo/삼성전자/marketShare')
+    fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/marketShare`)
       .then((response) => response.json())
       .then((data) => setMarketShareData(data))
       .catch((error) => console.error('Error fetching data: ', error));
