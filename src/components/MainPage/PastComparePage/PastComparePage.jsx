@@ -5,16 +5,17 @@ import { motion } from 'framer-motion';
 
 export default function PastComparePage() {
   return (
-    <div className="pastcomparepage flex-grow w-[88vw] h-screen">
-      <div className="ml-10 mr-10 mb-16 h-[250px]">
+    <div className="flex flex-col w-[88vw] h-[88vh] px-[51.356px] py-3 gap-3">
+      <div className="w-full h-1/2">
         <PastPage className="shadow-md" />
       </div>
 
-      <div className="ml-10 mr-10 h-[250px]">
+      <div className="w-full h-1/2">
         <motion.div
-          initial={{ y: -315, opacity: 0.85 }}
+          className="w-full h-full"
+          initial={{ y: 0, opacity: 0.85 }} // -315
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: 'spring', duration: 12, delay: 1 }}
+          transition={{ type: 'ease', duration: 6, delay: 2 }}
         >
           <ComparePage />
         </motion.div>

@@ -20,7 +20,7 @@ const Calendar = () => {
         type="text"
         placeholder="날짜 선택"
         value={selectedDate ? selectedDate.toLocaleDateString() : ''}
-        className="w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         readOnly
         onClick={toggleCalendar}
       />
