@@ -332,9 +332,10 @@
 //     </>
 //   );
 // }
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Nav } from 'react-bootstrap';
 import { ResponsiveBar } from '@nivo/bar';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
 
 export default function CompanyInfoPage3() {
   const [activeTab, setActiveTab] = useState('price');
@@ -342,24 +343,25 @@ export default function CompanyInfoPage3() {
   const [balance, setBalance] = useState([]);
   const [profitability, setProfitability] = useState([]);
   const [valuation, setValuation] = useState([]);
+  const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/competitorInfo/LG에너지솔루션/price')
+    fetch(`http://localhost:8080/api/competitorInfo/${userInputCompany}/price`)
       .then((response) => response.json())
       .then((data) => setPrice(data))
       .catch((error) => console.error('Error fetching data: ', error));
 
-    fetch('http://localhost:8080/api/competitorInfo/LG에너지솔루션/balanceSheet')
+    fetch(`http://localhost:8080/api/competitorInfo/${userInputCompany}/balanceSheet`)
       .then((response) => response.json())
       .then((data) => setBalance(data))
       .catch((error) => console.error('Error fetching data: ', error));
 
-    fetch('http://localhost:8080/api/competitorInfo/LG에너지솔루션/profitability')
+    fetch(`http://localhost:8080/api/competitorInfo/${userInputCompany}/profitability`)
       .then((response) => response.json())
       .then((data) => setProfitability(data))
       .catch((error) => console.error('Error fetching data: ', error));
 
-    fetch('http://localhost:8080/api/competitorInfo/LG에너지솔루션/valuation')
+    fetch(`http://localhost:8080/api/competitorInfo/${userInputCompany}/valuation`)
       .then((response) => response.json())
       .then((data) => setValuation(data))
       .catch((error) => console.error('Error fetching data: ', error));

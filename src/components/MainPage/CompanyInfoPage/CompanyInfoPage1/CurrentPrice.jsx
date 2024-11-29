@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
 
 export default function CurrentPrice() {
   const Card = ({ children, className = '' }) => (
     <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>
   );
+  const { userInputCompany } = useContext(CompanyContext);
+  // fetch 후 수정
+
   return (
     <div>
       <Card className="p-6">

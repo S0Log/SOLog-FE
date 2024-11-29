@@ -1,14 +1,17 @@
 // import React from 'react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
+
 export default function CardLeft() {
   const [stackedData, setStackedData] = useState([]);
   const [productNames, setProductNames] = useState([]);
+  const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
     // Fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/companyInfo/삼성전자/salesTrendRatio');
+        const response = await fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/salesTrendRatio`);
         const data = await response.json();
 
         // Extract unique product names
