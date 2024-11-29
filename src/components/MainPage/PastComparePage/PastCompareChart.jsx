@@ -3,10 +3,6 @@ import Chart from 'react-apexcharts';
 import axios from 'axios';
 
 export default function PastCompareChart({ setIsBarClick }) {
-  // const highlightStart = 13; // 강조 시작 인덱스
-  // const highlightEnd = 23; // 강조 끝 인덱스
-  // const [selected, setSelected] = useState(null);
-
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
   const [yaxisMin, setYaxisMin] = useState(0);
