@@ -65,6 +65,10 @@ export default function PastInfos(isBarClick) {
     }
   }, [isBarClick]); // 의존성 배열에 isBarClick 추가
 
+  useEffect(() => {
+    const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=삼성전자주가&sd=20241101000000&ed=20241101235959&period=u`;
+  }, []);
+
   return (
     <div className="h-full p-2">
       <div>
