@@ -1,33 +1,166 @@
-import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { CompanyContext } from '../../../contexts/CompanyContext';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
 
 const CompanyDetail = () => {
-  const tableData = [
-    [
-      { label: '시가총액', value: '581,000', tooltip: '기업의 총 가치를 나타내는 지표' },
-      { label: '표준업종분류코드', value: '1', tooltip: '업종을 분류하는 코드' },
-      { label: '자본금', value: '641,000', tooltip: '기업이 처음에 설립할 때 자본금' },
-      { label: '상장일', value: '594,000', tooltip: '기업이 증권 거래소에 상장된 날짜' },
-    ],
-    [
-      { label: '매출액', value: '212,699', tooltip: '기업이 일정 기간 동안 발생한 총 수입' },
-      { label: '영업이익', value: '103,100', tooltip: '기업의 핵심 영업 활동으로부터 발생한 이익' },
-      { label: '당기순이익', value: '4조 5,424억', tooltip: '세금과 비용을 제외한 순수 이익' },
-      { label: '주당 배당금', value: '13.13%', tooltip: '주식 1주당 지급되는 배당금 비율' },
-    ],
-    [
-      { label: '분기 최고가', value: '31,068원', tooltip: '분기 동안의 최고 주가' },
-      { label: '분기 최저가', value: '26.65배', tooltip: '분기 동안의 최저 주가' },
-      { label: 'PER', value: '22,627원', tooltip: '주가수익비율 (Price to Earnings Ratio)' },
-      { label: 'ROE', value: '19.41배', tooltip: '자기자본이익률 (Return on Equity)' },
-    ],
-    [
-      { label: 'PBR', value: '2,100원', tooltip: '주가순자산비율 (Price to Book Ratio)' },
-      { label: 'EPS', value: '7.21배', tooltip: '주당순이익 (Earnings Per Share)' },
-      { label: 'BPS', value: '83,636원', tooltip: '주당순자산 (Book Value Per Share)' },
-      { label: 'ROA', value: '2,100원', tooltip: '자산이익률 (Return on Assets)' },
-    ],
+  const location = useLocation();
+  const [tableData, setTableData] = useState([]);
+  const [glossary, setGlossary] = useState({});
+  const { userInputCompany } = useContext(CompanyContext);
+
+  const terms = [
+    '시장 종류',
+    '상장일',
+    '자본금',
+    '매출액',
+    '매출액증가율',
+    '영업이익',
+    '당기순이익',
+    '부채총계',
+    '분기 최고가',
+    '분기 최저가',
+    'PER',
+    'ROE',
+    'PBR',
+    'EPS',
+    'BPS',
+    'ROA',
   ];
+
+  // 용어 정의 가져오기
+  async function fetchGlossaryTerms() {
+    const glossaryData = {};
+    try {
+      await Promise.all(
+        terms.map(async (term) => {
+          const response = await axios.get(`/api/glossary/${term}`);
+          glossaryData[term] = response.data.definition;
+        }),
+      );
+      setGlossary(glossaryData);
+    } catch (error) {
+      console.error('Error fetching glossary terms:', error);
+    }
+  }
+
+  // 회사 정보 가져오기
+  async function fetchCompanyInfo() {
+    const url = '/api/companyInfo/detail';
+    const params = {
+      companyName: userInputCompany,
+      date: new Date(),
+    };
+    try {
+      const res = await axios.get(url, { params });
+      const data = res.data;
+
+      const updatedTableData = [
+        [
+          { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
+          { label: '상장일', value: data.listedDate?.split('T')[0] ?? '-', tooltip: glossary['상장일'] ?? '' },
+          {
+            label: '자본금',
+            value: data.capitalAmount
+              ? `${Math.floor(data.capitalAmount / 1_000_000).toLocaleString()} (백만 원)`
+              : '-',
+            tooltip: glossary['자본금'] ?? '',
+          },
+          {
+            label: '매출액',
+            value: data.revenue ? `${Math.floor(data.revenue).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['매출액'] ?? '',
+          },
+        ],
+        [
+          {
+            label: '매출액증가율',
+            value: data.revenueGrowthRate ? `${Math.floor(data.revenueGrowthRate)} (%)` : '-',
+            tooltip: glossary['매출액증가율'] ?? '',
+          },
+          {
+            label: '영업이익',
+            value: data.operIncome ? `${Math.floor(data.operIncome).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['영업이익'] ?? '',
+          },
+          {
+            label: '당기순이익',
+            value: data.netIncome ? `${Math.floor(data.netIncome).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['당기순이익'] ?? '',
+          },
+          {
+            label: '부채총계',
+            value: data.totalLiabilities ? `${Math.floor(data.totalLiabilities).toLocaleString()} (백만 원)` : '-',
+            tooltip: glossary['부채총계'] ?? '',
+          },
+        ],
+        [
+          {
+            label: '분기 최고가',
+            value: data.quarterlyHigh ? `${Math.floor(data.quarterlyHigh).toLocaleString()} (원)` : '-',
+            tooltip: glossary['분기 최고가'] ?? '',
+          },
+          {
+            label: '분기 최저가',
+            value: data.quarterlyLow ? `${Math.floor(data.quarterlyLow).toLocaleString()} (원)` : '-',
+            tooltip: glossary['분기 최저가'] ?? '',
+          },
+          {
+            label: 'PER',
+            value: data.per ? `${Math.floor(data.per)} (배)` : '-',
+            tooltip: glossary['PER'] ?? '',
+          },
+          {
+            label: 'ROE',
+            value: data.roe ? `${Math.floor(data.roe)} (%)` : '-',
+            tooltip: glossary['ROE'] ?? '',
+          },
+        ],
+        [
+          {
+            label: 'PBR',
+            value: data.pbr ? `${Math.floor(data.pbr)} (배)` : '-',
+            tooltip: glossary['PBR'] ?? '',
+          },
+          {
+            label: 'EPS',
+            value: data.eps ? `${Math.floor(data.eps).toLocaleString()} (원)` : '-',
+            tooltip: glossary['EPS'] ?? '',
+          },
+          {
+            label: 'BPS',
+            value: data.bps ? `${Math.floor(data.bps).toLocaleString()} (원)` : '-',
+            tooltip: glossary['BPS'] ?? '',
+          },
+          {
+            label: 'ROA',
+            value: data.roa ? `${Math.floor(data.roa)} (%)` : '-',
+            tooltip: glossary['ROA'] ?? '',
+          },
+        ],
+      ];
+      setTableData(updatedTableData);
+    } catch (error) {
+      console.error('Error fetching company info:', error);
+    }
+  }
+
+  useEffect(() => {
+    async function loadData() {
+      await fetchGlossaryTerms();
+    }
+    if (location.pathname === '/main/companyDetail') {
+      loadData();
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (Object.keys(glossary).length > 0) {
+      fetchCompanyInfo();
+    }
+  }, [glossary]);
 
   return (
     <div className="mt-0 ml-14 mr-14 mb-2">
@@ -36,19 +169,14 @@ const CompanyDetail = () => {
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
-                <React.Fragment key={colIndex}>
-                  <td className="!text-gray-500 font-bold p-3 text-[0.9em]" scope="col">
-                    <OverlayTrigger
-                      delay={{ show: 250, hide: 400 }}
-                      placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${colIndex}`}>{col.tooltip}</Tooltip>}
-                    >
+                <React.Fragment key={`${rowIndex}-${colIndex}`}>
+                  <td className="border-none !text-gray-700 font-bold p-3 text-[0.9em]">
+                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-content={col.tooltip}>
                       <span>{col.label}</span>
-                    </OverlayTrigger>
+                    </a>
+                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
                   </td>
-                  <th className="p-3 font-medium text-[1em]" scope="col">
-                    {col.value}
-                  </th>
+                  <td className="border-none p-3 !text-gray-800 font-medium text-[0.8em]">{col.value}</td>
                 </React.Fragment>
               ))}
             </tr>

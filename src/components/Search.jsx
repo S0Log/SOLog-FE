@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CompanyContext } from '../contexts/companyContext';
+import { CompanyContext } from '../contexts/CompanyContext';
 import magnifier from '/img/magnifier.png?url';
 import * as hangul from 'hangul-js';
 
@@ -58,15 +58,14 @@ const top50Companies = [
 ];
 
 const Search = () => {
-  const { setUserInputCompany } = useContext(CompanyContext);
-  const [userInput, setUserInput] = useState('');
+  const { userInputCompany, setUserInputCompany } = useContext(CompanyContext);
+
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     const input = e.target.value;
-    setUserInput(input);
+    setUserInputCompany(input);
 
     if (input.trim() === '') {
       setResults([]);
@@ -89,10 +88,10 @@ const Search = () => {
   };
 
   const handleSearch = () => {
-    if (top50Companies.includes(userInput)) {
-      setUserInputCompany(userInput);
-      navigate('/main/analyzeChart');
-    } else if (userInput !== '' && !top50Companies.includes(userInput)) {
+    if (top50Companies.includes(userInputCompany)) {
+      setUserInputCompany(userInputCompany);
+      navigate(`/main/companyInfo`);
+    } else if (userInputCompany !== '' && !top50Companies.includes(userInputCompany)) {
       alert('해당 기업에 대한 정보를 제공하지 않습니다. 다른 기업으로 검색해주세요.');
     }
   };
@@ -105,7 +104,7 @@ const Search = () => {
           placeholder="종목을 입력해주세요."
           className="w-full  placeholder-gray-400 focus:outline-none"
           onChange={handleChange}
-          value={userInput}
+          value={userInputCompany}
           onKeyDown={(e) => {
             if (e.key === 'Enter') handleSearch();
           }}
@@ -119,7 +118,7 @@ const Search = () => {
 
         {results.length > 0 && (
           <ul
-            className="absolute left-0 w-full bg-white border-gray-300 rounded-3xl max-h-80 overflow-y-auto mt-2 z-10 scrollbar-hide pl-0"
+            className="absolute left-0 w-full bg-white border-gray-300 rounded-3xl max-h-80 overflow-y-auto mt-4 z-10 scrollbar-hide pl-0"
             style={{ boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}
           >
             {results.map((company, index) => (
@@ -127,7 +126,7 @@ const Search = () => {
                 key={index}
                 className="pl-5 py-3 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  setUserInput(company);
+                  setUserInputCompany(company);
                   setResults([]);
                 }}
               >
