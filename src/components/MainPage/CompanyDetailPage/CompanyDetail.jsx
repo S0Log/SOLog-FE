@@ -171,7 +171,7 @@ const CompanyDetail = () => {
               {row.map((col, colIndex) => (
                 <React.Fragment key={`${rowIndex}-${colIndex}`}>
                   <td className="border-none !text-gray-700 font-bold p-3 text-[0.9em]">
-                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-content={col.tooltip}>
+                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-html={col.tooltip}>
                       <span>{col.label}</span>
                     </a>
                     <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
