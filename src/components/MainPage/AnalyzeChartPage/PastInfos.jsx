@@ -67,11 +67,11 @@ export default function PastInfos({ isBarClick, date }) {
           //   .get();
           const result = [
             {
-              press: '한겨레',
-              title: '   증권사들, 삼성전자 목표주가 줄줄이 내려…“5세대 메모리 불확실”   ',
-              desc: '  이유로 줄줄이 목표 주가를 내렸다. 증권사들은 단기간에 주가가 오르긴 어려울 것으로 내…리면서 회사가 고대역폭메모리 5세대 개선 제품을 추가로 준비하겠다고 언급한 것과...  ',
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
               date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101133504896',
+              url: 'http://v.daum.net/v/20241101094350956',
             },
             {
               press: '한국경제TV',
@@ -122,7 +122,7 @@ export default function PastInfos({ isBarClick, date }) {
           대신증권: Daishin,
           한화투자증권: Hanwha,
           현대차증권: Hyundai,
-          이베스트투자증권: eBest,
+          이베스트증권: eBest,
           유안타증권: Yuanta,
           하이투자증권: Hi,
           SK증권: SK,
