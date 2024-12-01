@@ -90,9 +90,9 @@ export default function PastInfos({ isBarClick, date }) {
             title: item.title,
             url: item.url,
           }));
-          console.log(result);
+          const slicedReports = result.slice(0, 5);
 
-          setReports(result);
+          setReports(slicedReports);
         } catch (error) {
           console.error('Error fetching report data:', error);
         }
