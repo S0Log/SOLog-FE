@@ -53,15 +53,15 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
       </div>
       <div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm font-semibold">시가</p>
+          <p className="m-0 text-sm">시가</p>
           <p className="m-0 text-sm">{renderedData.open.toLocaleString()}원</p>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm font-semibold">종가</p>
+          <p className="m-0 text-sm">종가</p>
           <p className="m-0 text-sm">{renderedData.close.toLocaleString()}원</p>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm font-semibold">거래량</p>
+          <p className="m-0 text-sm">거래량</p>
           <p className="m-0 text-sm">{renderedData.volume.toLocaleString()}</p>
         </div>
       </div>
