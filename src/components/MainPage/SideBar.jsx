@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 export default function SideBar() {
   const [navItems, setNavItems] = useState([
     { name: '인사이트', route: '/main/companyInfo', isActive: false },
-    { name: '기록 Log', route: '/main/analyzeChart', isActive: false },
-    { name: '시간 Log', route: '/main/pastCompare', isActive: false },
-    { name: '기업 Log', route: '/main/companyDetail', isActive: false },
+    { name: '기록 Log!', route: '/main/analyzeChart', isActive: false },
+    { name: '시간 Log!', route: '/main/pastCompare', isActive: false },
+    { name: '기업 Log!', route: '/main/companyDetail', isActive: false },
   ]);
   const navigate = useNavigate();
 

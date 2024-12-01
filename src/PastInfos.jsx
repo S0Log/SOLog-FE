@@ -30,7 +30,6 @@ import Yuhwa from '../../../../public/img/Yuhwa.jpg';
 import Heungkuk from '../../../../public/img/Heungkuk.png';
 import DS from '../../../../public/img/DS.jpeg';
 import Eugene from '../../../../public/img/Eugene.png';
-import Kyobo from '../../../../public/img/Kyobo.png';
 
 export default function PastInfos({ isBarClick, date }) {
   const [articles, setArticles] = useState([]);
@@ -139,7 +138,6 @@ export default function PastInfos({ isBarClick, date }) {
           흥국증권: Heungkuk,
           DS투자증권: DS,
           유진투자증권: Eugene,
-          교보증권: Kyobo,
         };
 
         const url = `/api/stock-insight/reports/${userInputCompany}`;
@@ -203,7 +201,7 @@ export default function PastInfos({ isBarClick, date }) {
                 idx !== reports.length - 1 ? 'border-b border-gray-300' : ''
               } pb-2`}
             >
-              <img src={report.logo} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
+              <img src={report.logo} alt="logo" className="h-auto max-h-[1em] w-[15px]" style={{ height: '1em' }} />
               <a
                 href="#"
                 className="text-sm text-black no-underline inline-block"
