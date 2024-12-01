@@ -4,8 +4,9 @@ import Chart from 'react-apexcharts';
 import axios from 'axios';
 
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import { data } from 'autoprefixer';
 
-export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, chartData }) {
+export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, chartData, setDate }) {
   const location = useLocation();
   const { userInputCompany } = useContext(CompanyContext);
 
@@ -38,9 +39,13 @@ export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, 
       type: 'candlestick',
       events: {
         click: (event, chartContext, config) => {
-          if (config.seriesIndex === 0) {
+          const dataPointIndex = config.dataPointIndex;
+          if (dataPointIndex !== -1) {
             setIsBarClick(true);
-            alert('You clicked on a "core" series point!');
+
+            const clickedBarData = chartData[dataPointIndex];
+            const clickedDate = clickedBarData?.x;
+            setDate(clickedDate);
           }
         },
       },
