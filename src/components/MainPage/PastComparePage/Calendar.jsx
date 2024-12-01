@@ -33,7 +33,18 @@ const Calendar = () => {
 
       {isCalendarOpen && (
         <div className="absolute text-sm w-[150%] top-full mt-1 left-0 z-10 border-none rounded-lg shadow-lg">
-          <CalendarComponent className="rounded-xl" onChange={handleDateChange} value={selectedDate} />
+          <CalendarComponent
+            className="rounded-xl"
+            onChange={handleDateChange}
+            value={selectedDate}
+            formatDay={(locale, date) => `${date.getDate()}`}
+            navigationLabel={({ date }) => (
+              <div>
+                <div>{date.getFullYear()}년</div>
+                <div>{date.toLocaleString('default', { month: 'long' })}</div>
+              </div>
+            )}
+          />
         </div>
       )}
     </div>
