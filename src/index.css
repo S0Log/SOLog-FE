@@ -5,15 +5,17 @@
 body{
     overflow: hidden;
 }
+
+.arrow{
+    display: none !important;
+}
+
 .tooltip {
-
-    background-color: rgba(221,221,221,0.9) !important;/* #8CD7F5를 불투명한 색상으로 적용 */
-
-    color: #333 !important;
+    background-color: #003FCB !important;
     border: none;
-    border-radius: 15px !important; /* 둥근 모서리 */
-    font-size: 0.95em !important; /* 글자 크기 */
-    padding: 9px !important; /* 내부 여백 */
-    font-weight:600 !important;
-  }
+    border-radius: 7px !important;
+    font-size: 0.95em !important;
+    padding: 8px !important;
+    font-weight:500 !important;
+}
   
