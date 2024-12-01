@@ -12,6 +12,7 @@ export default function AnalyzeChartPage() {
   const [isBarClick, setIsBarClick] = useState(false);
   const [durationType, setDurationType] = useState('day'); //일봉, 주봉, 월봉 중에 선택
   const [chartData, setChartData] = useState([]); //백엔드에서 가져온 주가 데이터
+  const [date, setDate] = useState('');
   const { userInputCompany } = useContext(CompanyContext);
 
   /** Backend에다가 요청 보내기 */
@@ -51,6 +52,7 @@ export default function AnalyzeChartPage() {
               setIsBarClick={setIsBarClick}
               durationType={durationType}
               chartData={chartData}
+              setDate={setDate}
             />
           </div>
         </div>
@@ -66,11 +68,12 @@ export default function AnalyzeChartPage() {
                 setIsBarClick={setIsBarClick}
                 durationType={durationType}
                 chartData={chartData}
+                setDate={setDate}
               />
             </div>
           </div>
           <div className="w-2/5 h-full">
-            <TotalInfo isBarClick={isBarClick} />
+            <TotalInfo isBarClick={isBarClick} durationType={durationType} date={date} />
           </div>
         </div>
       )}
