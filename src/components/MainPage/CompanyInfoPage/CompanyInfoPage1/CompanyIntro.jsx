@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // 이 줄을 추가하세요
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
+
 export default function CompanyIntro() {
   const Card = ({ children, className = '' }) => (
     <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>
   );
   const [companyOverview, setCompanyOverview] = useState([]);
   const [companyOverviewDate, setCompanyOverviewDate] = useState();
+  const { userInputCompany } = useContext(CompanyContext);
+
   useEffect(() => {
     const getData = async () => {
-      const url = '/api/companyInfo/삼성전자/companyOverview';
+      const url = `/api/companyInfo/${userInputCompany}/companyOverview`;
       try {
         const res = await axios.get(url);
         // companyOverviewDate는 날짜만 설정
