@@ -30,7 +30,6 @@ const CompanyDetail = () => {
     'ROA',
   ];
 
-  // 용어 정의 가져오기
   async function fetchGlossaryTerms() {
     const glossaryData = {};
     try {
@@ -46,7 +45,6 @@ const CompanyDetail = () => {
     }
   }
 
-  // 회사 정보 가져오기
   async function fetchCompanyInfo() {
     const url = '/api/companyInfo/detail';
     const params = {
@@ -163,18 +161,18 @@ const CompanyDetail = () => {
   }, [glossary]);
 
   return (
-    <div className="mt-0 ml-14 mr-14 mb-2">
-      <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
-        <tbody className="border border-gray-600">
+    <div className="w-full h-full">
+      <table className="shadow-md bg-white border border-gray-300 rounded-3xl overflow-hidden">
+        <tbody>
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
                 <React.Fragment key={`${rowIndex}-${colIndex}`}>
                   <td className="border-none !text-gray-700 font-bold p-3 text-[0.9em]">
-                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-content={col.tooltip}>
+                    <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-html={col.tooltip}>
                       <span>{col.label}</span>
                     </a>
-                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
+                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" arrow={false} />
                   </td>
                   <td className="border-none p-3 !text-gray-800 font-medium text-[0.8em]">{col.value}</td>
                 </React.Fragment>

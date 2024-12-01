@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function CompanyDetailPage() {
   return (
-    <div className="flex-grow items-center justify-center w-[88vw] h-[88vh]">
+    <div className="flex flex-col w-[88vw] h-[88vh] px-[51.356px] py-3 gap-3 justify-center">
       <CompanyDetailChart />
       <motion.div
         initial={{ y: 50, opacity: 0 }}
