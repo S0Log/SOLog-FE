@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CompanyContext } from '../contexts/CompanyContext';
 import magnifier from '/img/magnifier.png?url';
 import * as hangul from 'hangul-js';
@@ -59,9 +59,11 @@ const top50Companies = [
 
 const Search = () => {
   const { userInputCompany, setUserInputCompany } = useContext(CompanyContext);
-
   const [results, setResults] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const navigate = useNavigate();
+  const listRefs = useRef([]);
+  const location = useLocation();
 
   const handleChange = (e) => {
     const input = e.target.value;
@@ -69,6 +71,7 @@ const Search = () => {
 
     if (input.trim() === '') {
       setResults([]);
+      setActiveIndex(-1);
       return;
     }
 
@@ -76,22 +79,50 @@ const Search = () => {
     const filtered = top50Companies.filter((item) => {
       const groupedDisassembled = hangul.disassemble(item, true).map((char) => char[0]);
       const jaum = groupedDisassembled.join('');
-
-      /**
-       * 기업명에 포함되거나 기업명의 초성에 포함되면 해당 기업명을 결과에 포함
-       * searcher.search(item) - 입력값이 포함된 위치(첫 인덱스)를 반환, ex. -1,0,2...
-       * jaum.includes(input) - 초성 문자열에 입력값이 포함되어 있는 지 여부를 반환 ex. true, false */
       return searcher.search(item) >= 0 || jaum.toLowerCase().includes(input.toLowerCase());
     });
 
     setResults(filtered);
+    setActiveIndex(-1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      setActiveIndex((prevIndex) => {
+        const nextIndex = Math.min(prevIndex + 1, results.length - 1);
+        scrollToItem(nextIndex);
+        return nextIndex;
+      });
+    } else if (e.key === 'ArrowUp') {
+      setActiveIndex((prevIndex) => {
+        const nextIndex = Math.max(prevIndex - 1, 0);
+        scrollToItem(nextIndex);
+        return nextIndex;
+      });
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && activeIndex < results.length) {
+        setUserInputCompany(results[activeIndex]);
+        setResults([]);
+      } else {
+        handleSearch();
+      }
+    }
+  };
+
+  const scrollToItem = (index) => {
+    if (listRefs.current[index]) {
+      listRefs.current[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
   };
 
   const handleSearch = () => {
     if (top50Companies.includes(userInputCompany)) {
       setUserInputCompany(userInputCompany);
-      navigate(`/main/companyInfo`);
-    } else if (userInputCompany !== '' && !top50Companies.includes(userInputCompany)) {
+      window.location.href = window.location.origin + location.pathname; // 페이지 새로고침을 위해 추가
+    } else {
       alert('해당 기업에 대한 정보를 제공하지 않습니다. 다른 기업으로 검색해주세요.');
     }
   };
@@ -102,16 +133,14 @@ const Search = () => {
         <input
           type="text"
           placeholder="종목을 입력해주세요."
-          className="w-full  placeholder-gray-400 focus:outline-none"
+          className="w-full placeholder-gray-400 focus:outline-none"
           onChange={handleChange}
           value={userInputCompany}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearch();
-          }}
+          onKeyDown={handleKeyDown}
         />
         <button
           onClick={handleSearch}
-          className="absolute right-0 top-0 h-full rounded-r-3xl px-3 bg-white  flex items-center justify-center"
+          className="absolute right-0 top-0 h-full rounded-r-3xl px-3 bg-white flex items-center justify-center"
         >
           <img src={magnifier} alt="검색 아이콘" className="h-[65%]" />
         </button>
@@ -124,7 +153,8 @@ const Search = () => {
             {results.map((company, index) => (
               <li
                 key={index}
-                className="pl-5 py-3 hover:bg-gray-100 cursor-pointer"
+                ref={(el) => (listRefs.current[index] = el)}
+                className={`pl-5 py-3 cursor-pointer ${activeIndex === index ? 'bg-gray-100' : ''}`}
                 onClick={() => {
                   setUserInputCompany(company);
                   setResults([]);

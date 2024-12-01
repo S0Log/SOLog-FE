@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import hanhwa from '../../../../public/img/hanhwa.png';
 
 export default function PastInfos({ isBarClick, date }) {
   const [articles, setArticles] = useState([]);
@@ -87,11 +88,12 @@ export default function PastInfos({ isBarClick, date }) {
           const res = await axios.get(url, { params }); // await 추가
           const data = res.data;
           const result = data.map((item) => ({
+            writer: item.writer,
             title: item.title,
             url: item.url,
           }));
           const slicedReports = result.slice(0, 5);
-
+          console.log(slicedReports);
           setReports(slicedReports);
         } catch (error) {
           console.error('Error fetching report data:', error);
@@ -124,12 +126,16 @@ export default function PastInfos({ isBarClick, date }) {
         </ul>
       </div>
       <div>
-        <p className="font-semibold">투자의견</p>
+        <p className="font-semibold">Reports</p>
         <ul className="p-0 mb-0">
           {reports.map((report, idx) => {
             return (
-              <li key={idx} className={`${idx !== report.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
-                <a href={report.url} className="text-sm text-black no-underline">
+              <li
+                key={idx}
+                className={`flex items-center space-x-1 ${idx !== report.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}
+              >
+                <img src={hanhwa} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
+                <a href={report.url} className="text-sm text-black no-underline inline-block">
                   {report.title}
                 </a>
               </li>
