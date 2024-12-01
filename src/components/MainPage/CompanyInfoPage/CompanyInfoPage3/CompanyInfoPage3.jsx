@@ -371,25 +371,25 @@ export default function CompanyInfoPage3() {
     switch (activeTab) {
       case 'price':
         return price.map((item) => ({
-          companyName: item.companyName,
+          companyName: item.companyName.toUpperCase(),
           시가총액: Number(item.marketCapital.replace(/,/g, '')),
         }));
       case 'balance sheet':
         return balance.map((item) => ({
-          companyName: item.companyName,
+          companyName: item.companyName.toUpperCase(),
           자본총계: parseFloat(item.totalEquity),
           부채총계: parseFloat(item.totalLiabilities),
         }));
       case 'profitability':
         return profitability.map((item) => ({
-          companyName: item.companyName,
+          companyName: item.companyName.toUpperCase(),
           영업이익률: parseFloat(item.operatingMargin),
           매출증가율: parseFloat(item.revenueGrowthRate),
           ROE: parseFloat(item.roe),
         }));
       case 'valuation':
         return valuation.map((item) => ({
-          companyName: item.companyName,
+          companyName: item.companyName.toUpperCase(),
           PBR: parseFloat(item.pbr),
           PER: item.per !== 'null' ? parseFloat(item.per) : null,
         }));

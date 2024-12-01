@@ -8,7 +8,7 @@ export default function StockPriceImg() {
   const [chartData, setChartData] = useState([]);
   const [series, setSeries] = useState([
     {
-      name: userInputCompany,
+      name: userInputCompany.toUpperCase(),
       data: [],
     },
   ]);

@@ -48,21 +48,21 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
       }}
     >
       <div className="flex flex-row justify-between">
-        <p className="m-0 font-semibold">{renderedData.companyName}</p>
+        <p className="m-0 text-sm font-semibold">{renderedData.companyName.toUpperCase()}</p>
         <p className="m-0 text-sm">{renderedData.date}</p>
       </div>
       <div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm">시가</p>
-          <p className="m-0 text-sm">{renderedData.open}</p>
+          <p className="m-0 text-sm font-semibold">시가</p>
+          <p className="m-0 text-sm">{renderedData.open.toLocaleString()}원</p>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm">종가</p>
-          <p className="m-0 text-sm">{renderedData.close}</p>
+          <p className="m-0 text-sm font-semibold">종가</p>
+          <p className="m-0 text-sm">{renderedData.close.toLocaleString()}원</p>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm">거래량</p>
-          <p className="m-0 text-sm">{renderedData.volume}</p>
+          <p className="m-0 text-sm font-semibold">거래량</p>
+          <p className="m-0 text-sm">{renderedData.volume.toLocaleString()}</p>
         </div>
       </div>
     </div>
