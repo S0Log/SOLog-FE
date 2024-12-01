@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { CompanyContext } from '../../../contexts/CompanyContext';
 
-export default function PastInfos(isBarClick) {
+export default function PastInfos({ isBarClick, date }) {
   const [articles, setArticles] = useState([]);
+  const [reports, setReports] = useState([]);
+  const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
     if (isBarClick) {
@@ -68,16 +71,37 @@ export default function PastInfos(isBarClick) {
               url: 'http://v.daum.net/v/20241101092800341',
             },
           ];
-          console.log(result);
           setArticles(result);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
 
+      const fetchReport = async () => {
+        const url = `/api/stock-insight/reports/${userInputCompany}`;
+        const params = {
+          companyName: userInputCompany,
+          date: date,
+        };
+        try {
+          const res = await axios.get(url, { params }); // await 추가
+          const data = res.data;
+          const result = data.map((item) => ({
+            title: item.title,
+            url: item.url,
+          }));
+          console.log(result);
+
+          setReports(result);
+        } catch (error) {
+          console.error('Error fetching report data:', error);
+        }
+      };
+
       fetchData();
+      fetchReport();
     }
-  }, [isBarClick]); // 의존성 배열에 isBarClick 추가
+  }, [isBarClick, date]); // 의존성 배열에 isBarClick 추가
 
   useEffect(() => {
     const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=삼성전자주가&sd=20241101000000&ed=20241101235959&period=u`;
@@ -101,6 +125,17 @@ export default function PastInfos(isBarClick) {
       </div>
       <div>
         <p className="font-semibold">투자의견</p>
+        <ul className="p-0 mb-0">
+          {reports.map((report, idx) => {
+            return (
+              <li key={idx} className={`${idx !== report.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
+                <a href={report.url} className="text-sm text-black no-underline">
+                  {report.title}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

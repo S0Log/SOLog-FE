@@ -21,7 +21,6 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
         try {
           const res = await axios.get(url, { params });
           const data = res.data;
-          console.log(data);
           setRenderedData({
             companyName: userInputCompany,
             date: data.date,
@@ -34,7 +33,6 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
         }
       };
       fetchSummary();
-      console.log(durationType);
     }
   }, [isBarClick, durationType, date]);
 

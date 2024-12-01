@@ -9,7 +9,7 @@ export default function TotalInfo({ isBarClick, durationType, date }) {
         <CompanySummaryInfo isBarClick={isBarClick} durationType={durationType} date={date} />
       </div>
       <div className="bg-white h-4/5 rounded-3xl shadow-md">
-        <PastInfos isBarClick={isBarClick} />
+        <PastInfos isBarClick={isBarClick} date={date} />
       </div>
     </div>
   );
