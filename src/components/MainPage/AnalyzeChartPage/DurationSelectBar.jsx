@@ -10,8 +10,6 @@ export default function DurationSelectBar({ durationType, setDurationType }) {
       defaultActiveKey={durationType}
       className="justify-content-end custom-nav"
       onSelect={(selectedKey) => {
-        console.log(selectedKey);
-        alert(selectedKey);
         setDurationType(selectedKey);
       }}
     >
