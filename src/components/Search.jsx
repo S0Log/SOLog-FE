@@ -121,7 +121,13 @@ const Search = () => {
   const handleSearch = () => {
     if (top50Companies.includes(userInputCompany)) {
       setUserInputCompany(userInputCompany);
-      window.location.href = window.location.origin + location.pathname; // 페이지 새로고침을 위해 추가
+
+      // index 페이지인지 확인
+      if (location.pathname === '/' || location.pathname === '') {
+        window.location.href = window.location.origin + '/main/companyInfo'; // index 페이지로 이동
+      } else {
+        window.location.href = window.location.origin + location.pathname; // 페이지 새로고침
+      }
     } else {
       alert('해당 기업에 대한 정보를 제공하지 않습니다. 다른 기업으로 검색해주세요.');
     }
