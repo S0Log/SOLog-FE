@@ -50,12 +50,16 @@ export default function CompanyInfoPage3() {
       case 'balance sheet':
         return [
           {
-            name: '자본총계',
+            name: '부채총계',
             data: balance.map((item) => parseFloat(item.totalEquity || 0)),
           },
           {
-            name: '부채총계',
+            name: '자본총계',
             data: balance.map((item) => parseFloat(item.totalLiabilities || 0)),
+          },
+          {
+            name: '자산총계',
+            data: balance.map((item) => parseFloat(item.totalEquity + item.totalLiabilities || 0)),
           },
         ];
       case 'profitability':
@@ -107,12 +111,12 @@ export default function CompanyInfoPage3() {
     },
     plotOptions: {
       column: {
-        borderRadius: '25%',
+        borderRadius: '15%',
       },
     },
     series: getChartData(),
     credits: {
-      enabled: false, // Highcharts 로고 비활성화
+      enabled: false,
     },
   };
 

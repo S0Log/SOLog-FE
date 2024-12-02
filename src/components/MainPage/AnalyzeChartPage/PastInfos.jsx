@@ -116,6 +116,34 @@ export default function PastInfos({ isBarClick, date }) {
               date: ' 2024.11.01 ',
               url: 'http://v.daum.net/v/20241101094350956',
             },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
           ];
 
           setArticles(result);
@@ -238,7 +266,7 @@ export default function PastInfos({ isBarClick, date }) {
 
       {selectedUrl && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="rounded-2xl bg-white w-3/4 h-3/4 relative overflow-auto ">
+          <div className="rounded-2xl bg-white w-[80%] h-3/4 relative overflow-auto ">
             <button
               onClick={closeModal}
               className="font-extrabold text-sm text-white absolute top-4 right-6 bg-black bg-opacity-40 rounded-lg px-2 py-2"

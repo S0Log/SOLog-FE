@@ -43,13 +43,13 @@ export default function CurrentPrice() {
           </div>
           <h1 className="text-2xl font-bold">{pastData.companyName}</h1>
           <div className="flex items-baseline gap-2">
-            <span className="mt-2 text-3xl font-bold">{pastData.yesterday.toLocaleString()} KRW</span>
+            <span className="text-3xl font-bold">{pastData.yesterday.toLocaleString()} KRW</span>
           </div>
 
           <div>
             <span className={`flex items-center ${pastData.diff >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
               <span className="mr-1">{pastData.diff >= 0 ? '↑' : '↓'}</span>
-              {pastData.diff >= 0 ? `+${pastData.diff.toLocaleString()}` : `${pastData.diff.toLocaleString()}`}(
+              {pastData.diff >= 0 ? `+${pastData.diff.toLocaleString()} ` : `${pastData.diff.toLocaleString()} `}(
               {Math.abs(pastData.percentage).toFixed(2)}%)
             </span>
           </div>
