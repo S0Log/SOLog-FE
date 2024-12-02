@@ -31,6 +31,7 @@ import Heungkuk from '../../../../public/img/Heungkuk.png';
 import DS from '../../../../public/img/DS.jpeg';
 import Eugene from '../../../../public/img/Eugene.png';
 import Kyobo from '../../../../public/img/Kyobo.png';
+import IM from '../../../../public/img/IM.jpeg';
 
 export default function PastInfos({ isBarClick, date }) {
   const [articles, setArticles] = useState([]);
@@ -123,6 +124,7 @@ export default function PastInfos({ isBarClick, date }) {
           한화투자증권: Hanwha,
           현대차증권: Hyundai,
           이베스트증권: eBest,
+          이베스트투자증권: eBest,
           유안타증권: Yuanta,
           하이투자증권: Hi,
           SK증권: SK,
@@ -140,6 +142,7 @@ export default function PastInfos({ isBarClick, date }) {
           DS투자증권: DS,
           유진투자증권: Eugene,
           교보증권: Kyobo,
+          iM증권: IM,
         };
 
         const url = `/api/stock-insight/reports/${userInputCompany}`;
