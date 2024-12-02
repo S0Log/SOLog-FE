@@ -5,7 +5,7 @@ import { CompanyContext } from '../../../contexts/CompanyContext';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
 
-const CompanyDetail = () => {
+const CompanyDetail = ({ year, quarter }) => {
   const location = useLocation();
   const [tableData, setTableData] = useState([]);
   const [glossary, setGlossary] = useState({});
@@ -46,11 +46,33 @@ const CompanyDetail = () => {
   }
 
   async function fetchCompanyInfo() {
+    const getQuarterStartDate = () => {
+      let startDate;
+
+      switch (quarter) {
+        case 1:
+          startDate = new Date(year, 3, 1); // 1분기 (4월 1일)
+          break;
+        case 2:
+          startDate = new Date(year, 6, 1); // 2분기 (7월 1일)
+          break;
+        case 3:
+          startDate = new Date(year, 9, 1); // 3분기 (10월 1일)
+          break;
+        case 4:
+          startDate = new Date(year + 1, 0, 1); // 4분기 (다음 해 1월 1일)
+          break;
+      }
+
+      return startDate;
+    };
+
     const url = '/api/companyInfo/detail';
     const params = {
       companyName: userInputCompany,
-      date: new Date(),
+      date: getQuarterStartDate(),
     };
+
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
@@ -155,14 +177,14 @@ const CompanyDetail = () => {
   }, [location]);
 
   useEffect(() => {
-    if (Object.keys(glossary).length > 0) {
+    if (year !== 0) {
       fetchCompanyInfo();
     }
-  }, [glossary]);
+  }, [year, quarter, glossary]);
 
   return (
     <div className="w-full h-full">
-      <table className="shadow-md bg-white border border-gray-300 rounded-3xl overflow-hidden">
+      <table className="w-full h-full shadow-md bg-white border border-gray-300 rounded-3xl overflow-hidden">
         <tbody>
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
