@@ -53,7 +53,7 @@ const top50Companies = [
   '유한양행',
   '대한항공',
   '현대글로비스',
-  'KODEX CD금리액티브',
+  '포스코인터내셔널',
   '하이브',
 ];
 
@@ -119,8 +119,8 @@ const Search = () => {
   };
 
   const handleSearch = () => {
-    if (top50Companies.includes(userInputCompany)) {
-      setUserInputCompany(userInputCompany);
+    if (top50Companies.includes(userInputCompany.toUpperCase())) {
+      setUserInputCompany(userInputCompany.toUpperCase());
 
       // index 페이지인지 확인
       if (location.pathname === '/' || location.pathname === '') {

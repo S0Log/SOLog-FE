@@ -1,14 +1,15 @@
-// import React from 'react';
 import React, { useState, useEffect, useContext } from 'react';
+import Chart from 'react-apexcharts';
 import { CompanyContext } from '../../../../contexts/CompanyContext';
 
 export default function CardLeft() {
+  const [chartOptions, setChartOptions] = useState({});
+  const [chartSeries, setChartSeries] = useState([]);
   const [stackedData, setStackedData] = useState([]);
   const [productNames, setProductNames] = useState([]);
   const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
-    // Fetch data from the API
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/salesTrendRatio`);
@@ -21,14 +22,59 @@ export default function CardLeft() {
         // Extract unique years
         const years = [...new Set(data.map((item) => item.salesTrendRatioDate.split('-')[0]))];
 
-        // Create a structured format for stackedData
+        // Filter 2023-12 data and handle NaN or null
+        const latestData = data
+          .filter((item) => item.salesTrendRatioDate === '2023-12')
+          .map((item) => ({
+            ...item,
+            salesPercent: isNaN(item.salesPercent) || item.salesPercent === null ? 0 : item.salesPercent,
+            additionalMetric:
+              isNaN(item.additionalMetric) || item.additionalMetric === null ? 0 : item.additionalMetric,
+          }));
+
+        // Format data for the chart
+        const pieData = uniqueProductNames.map((productName) => {
+          const productData = latestData.find((item) => item.productName === productName);
+          return {
+            name: productName,
+            y: parseFloat(productData?.salesPercent || 0),
+            z: parseFloat(productData?.additionalMetric || 0),
+          };
+        });
+
+        // Filter out data with all zeros
+        const filteredPieData = pieData.filter((item) => item.y > 0);
+
+        setChartOptions({
+          chart: {
+            type: 'donut',
+          },
+          labels: filteredPieData.map((d) => d.name),
+          tooltip: {
+            y: {
+              formatter: (val) => `${val}%`,
+            },
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '65%',
+              },
+            },
+          },
+          colors: ['#4caefe', '#3dc3e8', '#2dd9db', '#1feeaf', '#0ff3a0', '#00e887', '#23e274'],
+        });
+
+        setChartSeries(filteredPieData.map((d) => d.y));
+
+        // Prepare table data
         const processedData = years.map((year) => {
           const yearData = data.filter((item) => item.salesTrendRatioDate.startsWith(year));
-          const yearEntry = { year: `${year}/12` };
+          const yearEntry = { year };
 
           uniqueProductNames.forEach((productName) => {
             const productData = yearData.find((item) => item.productName === productName);
-            yearEntry[productName] = parseFloat(productData?.salesPercent || 0); // Default to 0 if no data
+            yearEntry[productName] = parseFloat(productData?.salesPercent || 0);
           });
 
           return yearEntry;
@@ -45,45 +91,27 @@ export default function CardLeft() {
 
   return (
     <div className="h-full">
-      {/* 전체 제목 */}
-      <div className="flex items-center justify-between border-y p-2 mb-4 bg-[#f6f7f9]">
+      <div className="flex items-center justify-between p-2 mb-4">
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">매출비중 추이</span>
         </div>
         <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
 
-      {/* 그래프 */}
-      <div className="h-[200px] w-full mt-6">
-        <div className="relative h-full w-full">
-          {stackedData.map((data, index) => (
-            <div
-              key={data.year}
-              className="absolute bottom-0 flex h-full w-[60px] flex-col justify-end"
-              style={{
-                left: `${32 + (68 / stackedData.length) * index}%`, // 왼쪽에 32% 마진 추가
-              }}
-            >
-              {productNames.map((name, idx) => (
-                <div
-                  key={name + idx}
-                  style={{
-                    height: `${(data[name] || 0) * 0.7}%`, // Y축 비율로 차트 높이 설정
-                    backgroundColor: `rgba(${(idx * 50) % 255}, ${(idx * 100) % 255}, ${(idx * 150) % 255}, 0.7)`, // 색상 설정
-                    marginBottom: '2px',
-                  }}
-                ></div>
-              ))}
-            </div>
-          ))}
+      <div className="h-[280px] w-full mb-6">
+        {chartSeries.length > 0 && <Chart options={chartOptions} series={chartSeries} type="donut" height="100%" />}
+        <div
+          className="mr-2 float-right bottom-2 right-2 text-xs font-medium text-gray-700"
+          style={{ pointerEvents: 'none' }}
+        >
+          기준: 2023
         </div>
       </div>
 
-      {/* Table */}
-      <table className="w-full mt-4 border" style={{ tableLayout: 'fixed' }}>
+      <table className="text-xs shadow-md rounded-lg w-full border-none" style={{ tableLayout: 'fixed' }}>
         <thead>
-          <tr className="bg-gray-100">
-            <th className="px-2 py-2 text-left" style={{ width: '32%' }}>
+          <tr>
+            <th className="px-1 py-1 text-left" style={{ width: '32%' }}>
               제품명
             </th>
             {stackedData.map((data) => (
@@ -95,13 +123,13 @@ export default function CardLeft() {
         </thead>
         <tbody>
           {productNames.map((name) => (
-            <tr key={name} className="border-b">
-              <td className="px-2 py-2" style={{ width: '32%' }}>
+            <tr key={name}>
+              <td className="px-1 py-1" style={{ width: '32%' }}>
                 {name}
               </td>
               {stackedData.map((data) => (
-                <td key={data.year} className="px-2 py-2" style={{ width: `${68 / stackedData.length}%` }}>
-                  {data[name]?.toFixed(2) || '0.00'}
+                <td key={data.year} className="px-1 py-1" style={{ width: `${68 / stackedData.length}%` }}>
+                  {isNaN(data[name]) ? '-' : data[name]}
                 </td>
               ))}
             </tr>
@@ -110,72 +138,4 @@ export default function CardLeft() {
       </table>
     </div>
   );
-
-  // return (
-  //   <div className="h-full">
-  //     {/* 전체 제목 */}
-  //     <div className="flex items-center justify-between border-y p-2 mb-4 bg-[#f6f7f9]">
-  //       <div className="flex items-center space-x-2">
-  //         <span className="text-gray-900 font-semibold">매출비중 추이</span>
-  //       </div>
-  //       <span className="text-gray-500 text-sm">단위 : %</span>
-  //     </div>
-  //     {/* 그래프 */}
-  //     <div className="h-[200px] w-full mt-6">
-  //       <div className="relative h-full w-full">
-  //         {stackedData.map((data, index) => (
-  //           <div
-  //             key={data.year}
-  //             className="absolute bottom-0 flex h-full w-[60px] flex-col justify-end"
-  //             style={{ left: `${index * 80 + 40}px` }}
-  //           >
-  //             {productNames.map((name, idx) => (
-  //               <div
-  //                 key={name + idx}
-  //                 style={{
-  //                   height: `${(data[name] || 0) * 0.5}%`, // Y축 비율로 차트 높이 설정
-  //                   backgroundColor: `rgba(${(idx * 50) % 255}, ${(idx * 100) % 255}, ${(idx * 150) % 255}, 0.7)`, // 색상 설정
-  //                   marginBottom: "2px",
-  //                 }}
-  //               ></div>
-  //             ))}
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </div>
-  //     {/* Table */}
-  //     <table className="w-full mt-4 border" style={{ tableLayout: "fixed" }}>
-  //       <thead>
-  //         <tr className="bg-gray-100">
-  //           <th className="px-2 py-2 text-left" style={{ width: "32%" }}>제품명</th>
-  //           {stackedData.map((data) => (
-  //             <th
-  //               key={data.year}
-  //               className="px-2 py-2 text-left"
-  //               style={{ width: `${68 / stackedData.length}%` }}
-  //             >
-  //               {data.year}
-  //             </th>
-  //           ))}
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         {productNames.map((name) => (
-  //           <tr key={name} className="border-b">
-  //             <td className="px-2 py-2" style={{ width: "32%" }}>{name}</td>
-  //             {stackedData.map((data) => (
-  //               <td
-  //                 key={data.year}
-  //                 className="px-2 py-2"
-  //                 style={{ width: `${68 / stackedData.length}%` }}
-  //               >
-  //                 {data[name]?.toFixed(2) || "0.00"}
-  //               </td>
-  //             ))}
-  //           </tr>
-  //         ))}
-  //       </tbody>
-  //     </table>
-  //   </div>
-  // );
 }
