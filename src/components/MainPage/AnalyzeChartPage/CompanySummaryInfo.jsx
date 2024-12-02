@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { CompanyContext } from '../../../contexts/CompanyContext';
 import { use } from 'framer-motion/client';
+
+import { CompanyContext } from '../../../contexts/CompanyContext';
 
 export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
   const { userInputCompany } = useContext(CompanyContext);
