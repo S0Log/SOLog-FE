@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import * as cheerio from 'cheerio';
 import Hanwha from '../../../../public/img/Hanwha.png';
 import Mirae from '../../../../public/img/Mirae.png';
 import Samsung from '../../../../public/img/Samsung.png';
@@ -42,7 +43,20 @@ export default function PastInfos({ isBarClick, date }) {
   useEffect(() => {
     if (isBarClick) {
       const fetchData = async () => {
-        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=삼성전자주가&sd=20241101000000&ed=20241101235959&period=u`;
+        const formatDate = (date) => {
+          const dateObj = new Date(date);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+
+          const start = `${year}${month}${day}000000`;
+          const end = `${year}${month}${day}235959`;
+
+          return { start, end };
+        };
+
+        const { start, end } = formatDate(date);
+        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
 
         try {
           // const res = await axios.get(daumNewsUrl);
@@ -50,7 +64,7 @@ export default function PastInfos({ isBarClick, date }) {
           // const $contentTagArray = $('#dnsColl .c-list-basic > li');
 
           // const result = $contentTagArray
-          //   .slice(0, 3)
+          //   .slice(0, 7)
           //   .map((i, el) => {
           //     const press = $(el).find('.tit_item').prop('title');
           //     const title = $(el).find('.item-title').text();
@@ -103,6 +117,7 @@ export default function PastInfos({ isBarClick, date }) {
               url: 'http://v.daum.net/v/20241101094350956',
             },
           ];
+
           setArticles(result);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -158,7 +173,6 @@ export default function PastInfos({ isBarClick, date }) {
             title: item.title,
             url: item.url,
           }));
-          console.log(result[0].logo);
 
           setReports(result.slice(0, 5));
         } catch (error) {
@@ -184,7 +198,7 @@ export default function PastInfos({ isBarClick, date }) {
             <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
               <a
                 href="#"
-                className="text-sm text-black no-underline"
+                className="text-sm text-black no-underline block overflow-hidden w-full text-ellipsis whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedUrl(article.url);
