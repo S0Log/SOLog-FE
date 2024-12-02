@@ -43,7 +43,7 @@ export default function CardRight() {
       </div>
 
       {/* Table */}
-      <table className="w-full mt-4 border-none rounded-lg shadow-md">
+      <table className=" text-sm w-full mt-4 border-none rounded-lg shadow-md">
         <thead>
           <tr>
             <th className="px-4 py-2 text-left">제품</th>

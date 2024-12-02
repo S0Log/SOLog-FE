@@ -68,3 +68,20 @@ body{
     justify-content: center;
     align-items: center;
 }
+
+.custom-tabs .nav-link {
+    color: black; 
+    border: none; 
+    padding: 0.5rem 1rem;
+}
+  
+.custom-tabs .nav-link.active-tab {
+    color: black; 
+    border-bottom: 2px solid #007bff; 
+}
+
+.custom-tabs .nav-link:hover {
+    text-decoration: none; 
+    color: #0056b3;
+}
+  

@@ -80,7 +80,7 @@ export default function CardLeft() {
       </div>
 
       {/* Table */}
-      <table className="shadow-md rounded-lg w-full mt-4 border-none" style={{ tableLayout: 'fixed' }}>
+      <table className="text-sm shadow-md rounded-lg w-full mt-4 border-none" style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr>
             <th className="px-2 py-2 text-left" style={{ width: '32%' }}>
@@ -101,7 +101,7 @@ export default function CardLeft() {
               </td>
               {stackedData.map((data) => (
                 <td key={data.year} className="px-2 py-2" style={{ width: `${68 / stackedData.length}%` }}>
-                  {data[name]?.toFixed(2) || '0.00'}
+                  {isNaN(data[name]) ? '-' : data[name]}
                 </td>
               ))}
             </tr>
