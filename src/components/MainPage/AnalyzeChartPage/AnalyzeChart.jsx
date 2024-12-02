@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo, memo } from 'react';
-import { useLocation } from 'react-router-dom';
 import Chart from 'react-apexcharts';
-import { CompanyContext } from '../../../contexts/CompanyContext';
 import _ from 'lodash';
 
 const MemoizedChart = memo(({ options, series }) => {
   return <Chart options={options} series={series} type="candlestick" height="100%" width="100%" />;
 });
 
-export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, chartData, setDate }) {
-  const location = useLocation();
-  const { userInputCompany } = useContext(CompanyContext);
-
-  const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(100);
+export default function AnalyzeChart({
+  isBarClick,
+  setIsBarClick,
+  durationType,
+  chartData,
+  setDate,
+  startIndex,
+  setStartIndex,
+  endIndex,
+  setEndIndex,
+}) {
   const [cumulativeScroll, setCumulativeScroll] = useState(0);
   const [isMouseOverChart, setIsMouseOverChart] = useState(false);
 
@@ -21,15 +24,6 @@ export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, 
   const DATA_CHUNK_SIZE = 30;
 
   const renderData = useMemo(() => chartData.slice(startIndex, endIndex), [chartData, startIndex, endIndex]);
-
-  useEffect(() => {
-    if (chartData.length > 0) {
-      const initialEndIndex = chartData.length;
-      const initialStartIndex = Math.max(0, initialEndIndex - DATA_CHUNK_SIZE);
-      setStartIndex(initialStartIndex);
-      setEndIndex(initialEndIndex);
-    }
-  }, [chartData]);
 
   const handlePan = (direction) => {
     if (direction === 'next' && endIndex < chartData.length) {
@@ -42,6 +36,7 @@ export default function AnalyzeChart({ isBarClick, setIsBarClick, durationType, 
       const newEndIndex = Math.max(DATA_CHUNK_SIZE, endIndex - 10);
       setStartIndex(newStartIndex);
       setEndIndex(newEndIndex);
+      console.log('startidx', startIndex);
     }
   };
 
