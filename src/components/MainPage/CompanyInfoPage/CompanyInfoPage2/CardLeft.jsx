@@ -46,7 +46,7 @@ export default function CardLeft() {
   return (
     <div className="h-full">
       {/* 전체 제목 */}
-      <div className="flex items-center justify-between border-y p-2 mb-4 bg-[#f6f7f9]">
+      <div className="flex items-center justify-between p-2 mb-4 ">
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">매출비중 추이</span>
         </div>
@@ -80,9 +80,9 @@ export default function CardLeft() {
       </div>
 
       {/* Table */}
-      <table className="w-full mt-4 border" style={{ tableLayout: 'fixed' }}>
+      <table className="shadow-md rounded-lg w-full mt-4 border-none" style={{ tableLayout: 'fixed' }}>
         <thead>
-          <tr className="bg-gray-100">
+          <tr>
             <th className="px-2 py-2 text-left" style={{ width: '32%' }}>
               제품명
             </th>
@@ -95,7 +95,7 @@ export default function CardLeft() {
         </thead>
         <tbody>
           {productNames.map((name) => (
-            <tr key={name} className="border-b">
+            <tr key={name}>
               <td className="px-2 py-2" style={{ width: '32%' }}>
                 {name}
               </td>

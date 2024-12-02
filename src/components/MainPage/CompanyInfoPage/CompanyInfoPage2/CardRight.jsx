@@ -16,7 +16,7 @@ export default function CardRight() {
   return (
     <div className="h-full">
       {/* 전체 제목 */}
-      <div className="flex items-center justify-between border-y p-2 mb-4 bg-[#f6f7f9]">
+      <div className="flex items-center justify-between p-2 mb-4 ">
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">시장 점유율</span>
         </div>
@@ -43,16 +43,16 @@ export default function CardRight() {
       </div>
 
       {/* Table */}
-      <table className="w-full mt-4 border">
+      <table className="w-full mt-4 border-none rounded-lg shadow-md">
         <thead>
-          <tr className="bg-gray-100">
+          <tr>
             <th className="px-4 py-2 text-left">제품</th>
             <th className="px-4 py-2 text-left">시장 점유율 (%)</th>
           </tr>
         </thead>
         <tbody>
           {marketShareData.map((data, index) => (
-            <tr key={index} className="border-b">
+            <tr key={index}>
               <td className="px-4 py-2">{data.mainProduct}</td>
               <td className="px-4 py-2">{data.sharePercent}</td>
             </tr>

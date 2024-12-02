@@ -6,6 +6,7 @@ export default function CurrentPrice() {
     <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>
   );
   const { userInputCompany } = useContext(CompanyContext);
+  const companyName = userInputCompany;
   // fetch 후 수정
 
   return (
