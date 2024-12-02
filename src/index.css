@@ -13,58 +13,9 @@ body{
 .tooltip {
     background-color: #003FCB !important;
     border: none;
-    border-radius: 7px !important;
-    font-size: 0.95em !important;
-    padding: 8px !important;
-    font-weight:500 !important;
-}
-
-.react-calendar {
-    width: 100%; 
-    max-width: 250px !important; 
-    border: none; 
-    font-size: 1.1em; 
-}
+    border-radius: 15px !important; /* 둥근 모서리 */
+    font-size: 0.95em !important; /* 글자 크기 */
+    padding: 9px !important; /* 내부 여백 */
+    font-weight:600 !important;
+  }
   
-.react-calendar__tile {
-    height: 30px;
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-}
-  
-.react-calendar__tile--active {
-    background: #f4e04d; 
-    color: black; 
-    border-radius: 4px; 
-}
-  
-.react-calendar__month-view__days__day--weekend {
-    color: red; 
-}
-  
-.react-calendar__navigation {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    padding: 0; 
-    margin: 0 !important; 
-}
- 
-.react-calendar__navigation__label {
-    font-size: 0.9em; 
-    font-weight: bold;
-    text-align: center;
-    width: auto; 
-    display: block; 
-}
-  
-.react-calendar__navigation__arrow {
-    font-size: 10px;
-    padding: 2px; 
-    width: 20px; 
-    height: 20px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}

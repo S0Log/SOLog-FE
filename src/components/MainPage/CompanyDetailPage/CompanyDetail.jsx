@@ -5,7 +5,7 @@ import { CompanyContext } from '../../../contexts/CompanyContext';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
 
-const CompanyDetail = () => {
+const CompanyDetail = ({ year, quarter }) => {
   const location = useLocation();
   const [tableData, setTableData] = useState([]);
   const [glossary, setGlossary] = useState({});
@@ -30,7 +30,6 @@ const CompanyDetail = () => {
     'ROA',
   ];
 
-  // 용어 정의 가져오기
   async function fetchGlossaryTerms() {
     const glossaryData = {};
     try {
@@ -46,13 +45,34 @@ const CompanyDetail = () => {
     }
   }
 
-  // 회사 정보 가져오기
   async function fetchCompanyInfo() {
+    const getQuarterStartDate = () => {
+      let startDate;
+
+      switch (quarter) {
+        case 1:
+          startDate = new Date(year, 3, 1); // 1분기 (4월 1일)
+          break;
+        case 2:
+          startDate = new Date(year, 6, 1); // 2분기 (7월 1일)
+          break;
+        case 3:
+          startDate = new Date(year, 9, 1); // 3분기 (10월 1일)
+          break;
+        case 4:
+          startDate = new Date(year + 1, 0, 1); // 4분기 (다음 해 1월 1일)
+          break;
+      }
+
+      return startDate;
+    };
+
     const url = '/api/companyInfo/detail';
     const params = {
       companyName: userInputCompany,
-      date: new Date(),
+      date: getQuarterStartDate(),
     };
+
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
@@ -157,15 +177,15 @@ const CompanyDetail = () => {
   }, [location]);
 
   useEffect(() => {
-    if (Object.keys(glossary).length > 0) {
+    if (year !== 0) {
       fetchCompanyInfo();
     }
-  }, [glossary]);
+  }, [year, quarter, glossary]);
 
   return (
-    <div className="mt-0 ml-14 mr-14 mb-2">
-      <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
-        <tbody className="border border-gray-600">
+    <div className="w-full h-full">
+      <table className="w-full h-full shadow-md bg-white border border-gray-300 rounded-3xl overflow-hidden">
+        <tbody>
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
@@ -174,7 +194,7 @@ const CompanyDetail = () => {
                     <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-html={col.tooltip}>
                       <span>{col.label}</span>
                     </a>
-                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
+                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" arrow={false} />
                   </td>
                   <td className="border-none p-3 !text-gray-800 font-medium text-[0.8em]">{col.value}</td>
                 </React.Fragment>
