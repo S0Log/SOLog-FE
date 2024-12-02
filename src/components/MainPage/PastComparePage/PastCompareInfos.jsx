@@ -1,8 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
-const PastCompareInfos = ({ isBarClick }) => {
+import { CompanyContext } from '../../../contexts/CompanyContext';
+
+const PastCompareInfos = ({ isBarClick, date }) => {
+  const { userInputCompany } = useContext(CompanyContext);
+  const [renderedData, setRenderedData] = useState({
+    companyName: userInputCompany,
+    date: date,
+    open: null,
+    close: null,
+    volume: null,
+  });
   const [articles, setArticles] = useState([]);
 
+  /** 기업 정보 가져오기 */
+  useEffect(() => {
+    if (isBarClick === true && date) {
+      const fetchSummary = async () => {
+        const url = `/api/${userInputCompany}/companySummary`;
+        const params = { companyName: userInputCompany, date: date, durationType: 'day' };
+        console.log(params);
+        try {
+          const res = await axios.get(url, { params });
+          const data = res.data;
+          setRenderedData({
+            companyName: userInputCompany,
+            date: data.date,
+            open: data.openPrice,
+            close: data.closePrice,
+            volume: data.volume,
+          });
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 500) {
+              setRenderedData({
+                companyName: userInputCompany,
+                date: date,
+                open: null,
+                close: null,
+                volume: null,
+              });
+            } else {
+              console.error('Error:', error.message);
+            }
+          } else {
+            console.error('Network Error:', error.message);
+          }
+        }
+      };
+      fetchSummary();
+    }
+  }, [isBarClick, date]);
+
+  if (renderedData.volume === undefined || renderedData.volume === 0) {
+    return <div>Loading...</div>;
+  }
+
+  /** 뉴스 기사 크롤링 */
   useEffect(() => {
     if (isBarClick) {
       const fetchData = async () => {
@@ -67,21 +122,25 @@ const PastCompareInfos = ({ isBarClick }) => {
     <div className="w-full h-full flex flex-col gap-3">
       <div className="shadow-md rounded-3xl p-2 bg-white h-2/5 w-full flex flex-col justify-between">
         <div className="flex flex-row justify-between">
-          <p className="m-0 font-semibold">삼성전자</p>
-          <p className="m-0 text-sm">2024.11.22</p>
+          <p className="m-0 font-semibold">{userInputCompany}</p>
+          <p className="m-0 text-sm">{renderedData.date}</p>
         </div>
         <div>
           <div className="flex flex-row justify-between">
-            <p className="m-0 text-sm">PER</p>
-            <p className="m-0 text-sm">61,500</p>
+            <p className="m-0 text-sm">시가</p>
+            <p className="m-0 text-sm">{renderedData.open != null ? `${renderedData.open.toLocaleString()}원` : '-'}</p>
           </div>
           <div className="flex flex-row justify-between">
-            <p className="m-0 text-sm">ROE</p>
-            <p className="m-0 text-sm">61,500</p>
+            <p className="m-0 text-sm">종가</p>
+            <p className="m-0 text-sm">
+              {renderedData.close != null ? `${renderedData.close.toLocaleString()}원` : '-'}
+            </p>
           </div>
           <div className="flex flex-row justify-between">
             <p className="m-0 text-sm">거래량</p>
-            <p className="m-0 text-sm">100,000</p>
+            <p className="m-0 text-sm">
+              {renderedData.volume != null ? `${renderedData.volume.toLocaleString()}원` : '-'}
+            </p>
           </div>
         </div>
       </div>
