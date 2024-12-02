@@ -1,17 +1,17 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CompanyContext } from '../../contexts/companyContext';
+import { CompanyContext } from '../../contexts/CompanyContext';
 
 const RecommendedStocks = () => {
   const { userInputCompany, setUserInputCompany } = useContext(CompanyContext);
   const navigate = useNavigate();
-  const getStocks = () => ['삼성전자', 'SK하이닉스', '에너지솔루션', '신한지주'];
+  const getStocks = () => ['삼성전자', 'SK하이닉스', 'LG에너지솔루션', '신한지주'];
   const stocks = getStocks();
 
   const handleSearch = (stock) => {
     setUserInputCompany(stock);
     if (userInputCompany.trim) {
-      navigate('/main/analyzeChart');
+      navigate(`/main/companyInfo`);
     }
   };
   return (
@@ -31,8 +31,8 @@ const RecommendedStocks = () => {
                 label
               ) : (
                 <a
+                  href=""
                   onClick={() => handleSearch(label)}
-                  // href={`#${label}`}
                   className="block w-full text-center text-gray-800 no-underline"
                 >
                   {label}

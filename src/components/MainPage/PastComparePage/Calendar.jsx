@@ -20,7 +20,7 @@ const Calendar = () => {
         type="text"
         placeholder="날짜 선택"
         value={selectedDate ? selectedDate.toLocaleDateString() : ''}
-        className="w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="w-full px-3 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         readOnly
         onClick={toggleCalendar}
       />
@@ -33,7 +33,18 @@ const Calendar = () => {
 
       {isCalendarOpen && (
         <div className="absolute text-sm w-[150%] top-full mt-1 left-0 z-10 border-none rounded-lg shadow-lg">
-          <CalendarComponent className="rounded-xl" onChange={handleDateChange} value={selectedDate} />
+          <CalendarComponent
+            className="rounded-xl"
+            onChange={handleDateChange}
+            value={selectedDate}
+            formatDay={(locale, date) => `${date.getDate()}`}
+            navigationLabel={({ date }) => (
+              <div>
+                <div>{date.getFullYear()}년</div>
+                <div>{date.toLocaleString('default', { month: 'long' })}</div>
+              </div>
+            )}
+          />
         </div>
       )}
     </div>

@@ -1,13 +1,9 @@
-import { createContext, useState } from 'react';
-import IndexPage from './components/IndexPage/IndexPage';
-import Search from './components/Search';
-
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { RouterProvider } from 'react-router-dom';
 
 import mainRouter from './routers/main-router';
-import { CompanyProvider } from './contexts/companyContext';
+import { CompanyProvider } from './contexts/CompanyContext';
 
 function App() {
   return (
