@@ -43,7 +43,6 @@ export default function CompanyInfoPage3() {
   const getChartData = () => {
     switch (activeTab) {
       case 'price':
-        console.log(price);
         return price.map((item) => ({
           name: item.companyName,
           data: [Number(item.marketCapital.replace(/,/g, ''))],
@@ -123,8 +122,10 @@ export default function CompanyInfoPage3() {
       align: 'left',
     },
     xAxis: {
-      categories: price.map((item) => item.companyName),
-      title: {},
+      categories: activeTab === 'price' ? ['시가총액'] : price.map((item) => item.companyName),
+      title: {
+        text: '',
+      },
     },
     yAxis: {
       title: {
@@ -138,15 +139,11 @@ export default function CompanyInfoPage3() {
     },
     series:
       activeTab === 'price'
-        ? [
-            {
-              name: '시가총액',
-              data: price.map((item, index) => ({
-                y: Number(item.marketCapital.replace(/,/g, '')), // 데이터 값
-                color: Highcharts.getOptions().colors[index % Highcharts.getOptions().colors.length], // Highcharts 기본 색상 순환
-              })),
-            },
-          ]
+        ? price.map((item, index) => ({
+            name: item.companyName,
+            data: [Number(item.marketCapital.replace(/,/g, ''))],
+            color: Highcharts.getOptions().colors[index % Highcharts.getOptions().colors.length],
+          }))
         : getChartData(),
     credits: {
       enabled: false,

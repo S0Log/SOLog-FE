@@ -7,7 +7,7 @@ export default function CompanyInfoPage2() {
 
   return (
     <div
-      className={`grid gap-7 ${isRightCardEmpty ? 'grid-cols-1 justify-center items-center h-full' : 'md:gridnp-cols-2'}`}
+      className={`grid gap-7 ${isRightCardEmpty ? 'grid-cols-1 justify-center items-center h-full' : 'md:grid-cols-2'}`}
     >
       <CardLeft />
 
