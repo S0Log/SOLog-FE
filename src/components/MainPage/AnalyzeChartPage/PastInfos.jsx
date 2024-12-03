@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import * as cheerio from 'cheerio';
 import Hanwha from '../../../../public/img/Hanwha.png';
 import Mirae from '../../../../public/img/Mirae.png';
 import Samsung from '../../../../public/img/Samsung.png';
@@ -42,7 +43,20 @@ export default function PastInfos({ isBarClick, date }) {
   useEffect(() => {
     if (isBarClick) {
       const fetchData = async () => {
-        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=삼성전자주가&sd=20241101000000&ed=20241101235959&period=u`;
+        const formatDate = (date) => {
+          const dateObj = new Date(date);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+
+          const start = `${year}${month}${day}000000`;
+          const end = `${year}${month}${day}235959`;
+
+          return { start, end };
+        };
+
+        const { start, end } = formatDate(date);
+        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
 
         try {
           // const res = await axios.get(daumNewsUrl);
@@ -50,7 +64,7 @@ export default function PastInfos({ isBarClick, date }) {
           // const $contentTagArray = $('#dnsColl .c-list-basic > li');
 
           // const result = $contentTagArray
-          //   .slice(0, 3)
+          //   .slice(0, 7)
           //   .map((i, el) => {
           //     const press = $(el).find('.tit_item').prop('title');
           //     const title = $(el).find('.item-title').text();
@@ -103,6 +117,7 @@ export default function PastInfos({ isBarClick, date }) {
               url: 'http://v.daum.net/v/20241101094350956',
             },
           ];
+
           setArticles(result);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -152,13 +167,13 @@ export default function PastInfos({ isBarClick, date }) {
         };
         try {
           const res = await axios.get(url, { params });
+          console.log(res);
           const data = res.data;
           const result = data.map((item) => ({
             logo: securitiesData[item.writer],
             title: item.title,
             url: item.url,
           }));
-          console.log(result[0].logo);
 
           setReports(result.slice(0, 5));
         } catch (error) {
@@ -176,15 +191,22 @@ export default function PastInfos({ isBarClick, date }) {
   };
 
   return (
-    <div className="h-full p-2">
+    <div
+      className="h-full p-2 overflow-auto 
+      [&::-webkit-scrollbar]:w-2
+      [&::-webkit-scrollbar-track]:rounded-full
+    [&::-webkit-scrollbar-track]:bg-gray-100
+      [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:bg-gray-300"
+    >
       <div>
-        <p className="font-semibold">Articles</p>
+        <p className="font-semibold p-0 m-0">Articles</p>
         <ul className="p-0 mb-0">
           {articles.map((article, idx) => (
-            <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
+            <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} py-2`}>
               <a
                 href="#"
-                className="text-sm text-black no-underline"
+                className="text-sm text-black no-underline block overflow-hidden w-full text-ellipsis whitespace-nowrap"
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedUrl(article.url);
@@ -192,19 +214,18 @@ export default function PastInfos({ isBarClick, date }) {
               >
                 {article.title}
               </a>
+              <p className="text-xs p-0 m-0">{article.desc}</p>
             </li>
           ))}
         </ul>
       </div>
       <div>
-        <p className="font-semibold">Reports</p>
+        <p className="font-semibold p-0 m-0">Reports</p>
         <ul className="p-0 mb-0">
           {reports.map((report, idx) => (
             <li
               key={idx}
-              className={`flex items-center space-x-1 ${
-                idx !== reports.length - 1 ? 'border-b border-gray-300' : ''
-              } pb-2`}
+              className={`flex items-center ${idx !== reports.length - 1 ? 'border-b border-gray-300' : ''} py-2 gap-2`}
             >
               <img src={report.logo} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
               <a
@@ -224,7 +245,7 @@ export default function PastInfos({ isBarClick, date }) {
 
       {selectedUrl && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="rounded-2xl bg-white w-3/4 h-3/4 relative overflow-auto ">
+          <div className="rounded-3xl bg-white w-[80%] h-3/4 relative overflow-auto ">
             <button
               onClick={closeModal}
               className="font-extrabold text-sm text-white absolute top-4 right-6 bg-black bg-opacity-40 rounded-lg px-2 py-2"
