@@ -179,7 +179,7 @@ const PastCompareInfos = ({ isBarClick, date }) => {
               <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} py-2`}>
                 <a
                   href={article.url}
-                  className="text-sm text-black no-underline font-semibold"
+                  className="text-sm text-black no-underline"
                   onClick={(e) => {
                     e.preventDefault();
                     setSelectedUrl(article.url);

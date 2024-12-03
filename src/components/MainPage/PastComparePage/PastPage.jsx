@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Calendar from './Calendar';
 import TermSelect from './TermSelect';
-import PastArticle from './PastArticle';
 import PastCompareInfos from './PastCompareInfos';
 import BaseChart from './BaseChart';
 
