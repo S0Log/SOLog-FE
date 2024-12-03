@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 
-export default function PastCompareChart2({ compareData, compareMarkingData, periodCnt, setIsBarClick, setClickDt }) {
+export default function BaseChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
+  const [maxVal, setMaxVal] = useState(0);
+  const [minVal, setMinVal] = useState(0);
 
   /**coreData, exteriorData 채우기 */
   useEffect(() => {
@@ -13,17 +15,17 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
 
     let targetIndex = -1;
     // formattedDate가 userSelectDt이거나 가장 가까운 이전 날짜를 가진 항목 찾기
-    compareData?.forEach((item, index) => {
+    baseData?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
-      if (formattedDate <= compareMarkingData) {
-        if (targetIndex === -1 || formattedDate > compareData[targetIndex].date.split(' ')[0]) {
+      if (formattedDate <= userSelectDt) {
+        if (targetIndex === -1 || formattedDate > baseData[targetIndex].date.split(' ')[0]) {
           targetIndex = index;
         }
       }
     });
 
     // coreDataTmp와 exteriorDataTmp 채우기
-    compareData?.forEach((item, index) => {
+    baseData?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
       const open = item.open;
       const high = item.high;
@@ -39,11 +41,11 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
       }
     });
 
-    // console.log('core', coreDataTmp.length);
-    // console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
-  }, [compareData]);
+    setMaxVal(Math.max(...baseData.map((obj) => obj.high)));
+    setMinVal(Math.min(...baseData.map((obj) => obj.low)));
+  }, [baseData]);
 
   const series = [
     {
@@ -57,6 +59,7 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
   ];
 
   const options = {
+    dataLabels: { enabled: false },
     plotOptions: {
       candlestick: {
         colors: {
@@ -93,30 +96,24 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
     },
     xaxis: {
       type: 'category',
-      tickAmount: 10,
+      tickAmount: 5,
+      labels: {
+        rotate: 0,
+      },
     },
     yaxis: {
-      // min: yaxisMin,
-      // max: yaxisMax,
       tickAmount: 4,
       tooltip: {
         enabled: false,
       },
+      min: minVal,
+      max: maxVal,
     },
   };
 
   return (
     <div className="w-full h-full">
-      <Chart
-        options={{
-          ...options,
-          grid: {},
-        }}
-        series={series}
-        type="candlestick"
-        height="100%"
-        width="100%"
-      />
+      <Chart options={options} series={series} type="candlestick" height="100%" width="100%" />
     </div>
   );
 }

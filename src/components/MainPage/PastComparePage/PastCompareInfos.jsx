@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 import { CompanyContext } from '../../../contexts/CompanyContext';
 
@@ -13,6 +14,7 @@ const PastCompareInfos = ({ isBarClick, date }) => {
     volume: null,
   });
   const [articles, setArticles] = useState([]);
+  const [selectedUrl, setSelectedUrl] = useState(null); // 모달에 표시할 URL
 
   /** 기업 정보 가져오기 */
   useEffect(() => {
@@ -20,7 +22,6 @@ const PastCompareInfos = ({ isBarClick, date }) => {
       const fetchSummary = async () => {
         const url = `/api/${userInputCompany}/companySummary`;
         const params = { companyName: userInputCompany, date: date, durationType: 'day' };
-        console.log(params);
         try {
           const res = await axios.get(url, { params });
           const data = res.data;
@@ -61,7 +62,21 @@ const PastCompareInfos = ({ isBarClick, date }) => {
   useEffect(() => {
     if (isBarClick) {
       const fetchData = async () => {
-        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=삼성전자주가&sd=20241101000000&ed=20241101235959&period=u`;
+        const formatDate = (date) => {
+          const dateObj = new Date(date);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+
+          const start = `${year}${month}${day}000000`;
+          const end = `${year}${month}${day}235959`;
+
+          return { start, end };
+        };
+
+        const { start, end } = formatDate(date);
+        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
+
         try {
           // const res = await axios.get(daumNewsUrl);
           // const $ = cheerio.load(res.data);
@@ -84,6 +99,7 @@ const PastCompareInfos = ({ isBarClick, date }) => {
           //     };
           //   })
           //   .get();
+
           const result = [
             {
               press: '한겨레',
@@ -101,7 +117,7 @@ const PastCompareInfos = ({ isBarClick, date }) => {
             },
             {
               press: '연합뉴스',
-              title: '   증권가, 삼성전자 목표주가 줄하향 "HBM 계획보다 실적으로 증명해야"   ',
+              title: '   증권가, 삼성전자 목표주가 줄하향 "HBM 계획보다 실적으로 증명해야"',
               desc: '  언어에는 분명 아직 간극이 있어 보인다"며 "다음에는 계획서가 아닌 증명서를 보여주기를…따른 체질 개선이 기대된다는 낙관적 전망도 있다. 박유악 키움증권 연구원은 "4...  ',
               date: ' 2024.11.01 ',
               url: 'http://v.daum.net/v/20241101092800341',
@@ -116,13 +132,17 @@ const PastCompareInfos = ({ isBarClick, date }) => {
 
       fetchData();
     }
-  }, [isBarClick]); // 의존성 배열에 isBarClick 추가
+  }, [isBarClick, date]); // 의존성 배열에 isBarClick 추가
+
+  const closeModal = () => {
+    setSelectedUrl(null);
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-3">
-      <div className="shadow-md rounded-3xl p-2 bg-white h-2/5 w-full flex flex-col justify-between">
+      <div className={`shadow-md rounded-3xl p-2 h-2/5 w-full flex flex-col justify-between bg-white`}>
         <div className="flex flex-row justify-between">
-          <p className="m-0 font-semibold">{userInputCompany}</p>
+          <p className="m-0 font-semibold text-sm">{userInputCompany}</p>
           <p className="m-0 text-sm">{renderedData.date}</p>
         </div>
         <div>
@@ -139,18 +159,32 @@ const PastCompareInfos = ({ isBarClick, date }) => {
           <div className="flex flex-row justify-between">
             <p className="m-0 text-sm">거래량</p>
             <p className="m-0 text-sm">
-              {renderedData.volume != null ? `${renderedData.volume.toLocaleString()}원` : '-'}
+              {renderedData.volume != null ? `${renderedData.volume.toLocaleString()}` : '-'}
             </p>
           </div>
         </div>
       </div>
-      <div className="shadow-md rounded-3xl p-2 bg-white h-3/5 w-full flex flex-col">
-        <p className="font-semibold">Articles</p>
+      <div
+        className="shadow-md rounded-3xl p-2 h-3/5 w-full flex flex-col bg-white overflow-auto
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-gray-100
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-gray-300"
+      >
+        <p className="font-semibold p-0 m-0">Articles</p>
         <ul className="p-0 mb-0">
           {articles.map((article, idx) => {
             return (
-              <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
-                <a href={article.url} className="text-sm text-black no-underline">
+              <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} py-2`}>
+                <a
+                  href={article.url}
+                  className="text-sm text-black no-underline font-semibold"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedUrl(article.url);
+                  }}
+                >
                   {article.title}
                 </a>
               </li>
@@ -158,6 +192,20 @@ const PastCompareInfos = ({ isBarClick, date }) => {
           })}
         </ul>
       </div>
+
+      {selectedUrl && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="rounded-2xl bg-white w-[80%] h-3/4 relative overflow-auto ">
+            <button
+              onClick={closeModal}
+              className="font-extrabold text-sm text-white absolute top-4 right-6 bg-black bg-opacity-40 rounded-lg px-2 py-2"
+            >
+              닫기
+            </button>
+            <iframe src={selectedUrl} title="Content" className="w-full h-full border-0"></iframe>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

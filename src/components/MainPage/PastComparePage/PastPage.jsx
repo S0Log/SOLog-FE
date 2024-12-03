@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 import TermSelect from './TermSelect';
 import PastArticle from './PastArticle';
 import PastCompareInfos from './PastCompareInfos';
-import PastCompareChart from './PastCompareChart';
+import BaseChart from './BaseChart';
 
 const PastPage = ({
   baseData,
@@ -27,7 +27,7 @@ const PastPage = ({
   return (
     <div className="flex w-full h-full flex-row gap-3">
       <div className="shadow-md rounded-3xl bg-white w-3/5 h-full flex flex-col">
-        <div className="w-full h-[15%] flex justify-between">
+        <div className="w-full h-[13%] flex justify-between">
           <div className="flex h-full gap-2">
             <div className="w-[10vw] h-full">
               <Calendar userSelectDt={userSelectDt} setUserSelectDt={setUserSelectDt} />
@@ -39,14 +39,14 @@ const PastPage = ({
           <div>
             <button
               onClick={onClick}
-              className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-xl shadow-sm"
+              className="block h-full w-full px-3 py-2 bg-white border border-gray-300 rounded-xl shadow-sm"
             >
               검색
             </button>
           </div>
         </div>
-        <div className="h-[85%] w-full">
-          <PastCompareChart
+        <div className="h-[87%] w-full">
+          <BaseChart
             baseData={baseData}
             userSelectDt={userSelectDt}
             periodCnt={periodCnt}

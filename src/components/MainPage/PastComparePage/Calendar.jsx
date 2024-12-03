@@ -15,12 +15,12 @@ const Calendar = ({ userSelectDt, setUserSelectDt }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       <input
         type="text"
         placeholder="날짜 선택"
         value={userSelectDt ? userSelectDt : ''}
-        className="w-full px-3 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="h-full w-full px-3 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         readOnly
         onClick={toggleCalendar}
       />

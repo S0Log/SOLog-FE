@@ -75,7 +75,6 @@ export default function AnalyzeChart({
         },
       },
       chart: {
-        animations: { enabled: false },
         type: 'candlestick',
         zoom: { enabled: false },
         pan: { enabled: false },
