@@ -1,88 +1,162 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import { Nav } from 'react-bootstrap';
-import { ResponsiveBar } from '@nivo/bar';
+import { CompanyContext } from '../../../../contexts/CompanyContext';
 
 export default function CompanyInfoPage3() {
-  const data = [
-    {
-      company: 'LG전자',
-      ROE: 3,
-      영업이익률: 2,
-      매출액증가율: 1,
+  const [activeTab, setActiveTab] = useState('price');
+  const [price, setPrice] = useState([]);
+  const [balance, setBalance] = useState([]);
+  const [profitability, setProfitability] = useState([]);
+  const [valuation, setValuation] = useState([]);
+  const { userInputCompany } = useContext(CompanyContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const priceData = await fetch(`/api/competitorInfo/${userInputCompany}/price`).then((res) => res.json());
+        setPrice(priceData);
+
+        const balanceData = await fetch(`/api/competitorInfo/${userInputCompany}/balanceSheet`).then((res) =>
+          res.json(),
+        );
+        setBalance(balanceData);
+
+        const profitabilityData = await fetch(`/api/competitorInfo/${userInputCompany}/profitability`).then((res) =>
+          res.json(),
+        );
+        setProfitability(profitabilityData);
+
+        const valuationData = await fetch(`/api/competitorInfo/${userInputCompany}/valuation`).then((res) =>
+          res.json(),
+        );
+        setValuation(valuationData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [userInputCompany]);
+
+  const getChartData = () => {
+    switch (activeTab) {
+      case 'price':
+        return price.map((item) => ({
+          name: item.companyName,
+          data: [Number(item.marketCapital.replace(/,/g, ''))],
+        }));
+      case 'balance sheet':
+        return [
+          {
+            name: '부채총계',
+            data: balance.map((item) => parseFloat(item.totalEquity || 0)),
+          },
+          {
+            name: '자본총계',
+            data: balance.map((item) => parseFloat(item.totalLiabilities || 0)),
+          },
+          {
+            name: '자산총계',
+            data: balance.map((item) => parseFloat(item.totalEquity + item.totalLiabilities || 0)),
+          },
+        ];
+      case 'profitability':
+        return [
+          {
+            name: '영업이익률',
+            data: profitability.map((item) => parseFloat(item.operatingMargin || 0)),
+          },
+          {
+            name: '매출증가율',
+            data: profitability.map((item) => parseFloat(item.revenueGrowthRate || 0)),
+          },
+          {
+            name: 'ROE',
+            data: profitability.map((item) => parseFloat(item.roe || 0)),
+          },
+        ];
+      case 'valuation':
+        return [
+          {
+            name: 'PBR',
+            data: valuation.map((item) => parseFloat(item.pbr || 0)),
+          },
+          {
+            name: 'PER',
+            data: valuation.map((item) => (item.per !== 'null' ? parseFloat(item.per || 0) : null)),
+          },
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const chartOptions = {
+    chart: {
+      type: 'column',
     },
-    {
-      company: '삼성전자',
-      ROE: 2,
-      영업이익률: 2,
-      매출액증가율: -12,
+    title: {
+      text: '',
     },
-    {
-      company: 'SK하이닉스',
-      ROE: -15,
-      영업이익률: -22,
-      매출액증가율: -25,
+    xAxis: {
+      categories: price.map((item) => item.companyName), // X축에 회사 이름 표시
+      title: {},
     },
-    {
-      company: 'LG디스플레이',
-      ROE: -30,
-      영업이익률: -10,
-      매출액증가율: -17,
+    yAxis: {
+      title: {
+        text: 'Values',
+      },
     },
-  ];
+    plotOptions: {
+      column: {
+        borderRadius: '15%',
+      },
+    },
+    series: getChartData(),
+    credits: {
+      enabled: false,
+    },
+  };
 
   return (
-    <>
-      <Nav fill variant="tabs" defaultActiveKey="price" onSelect={(selectedKey) => console.log(selectedKey)}>
+    <div>
+      <div className="mt-2 font-black flex justify-between items-center pb-2">
+        <span className="text-sm font-medium ml-auto">기준: 2023.12</span>
+      </div>
+      <Nav
+        fill
+        variant="tabs"
+        className="custom-tabs"
+        defaultActiveKey="price"
+        onSelect={(selectedKey) => setActiveTab(selectedKey)}
+      >
         <Nav.Item>
-          <Nav.Link eventKey="price">Price</Nav.Link>
+          <Nav.Link eventKey="price" className={activeTab === 'price' ? 'active-tab' : ''}>
+            Price
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="balance sheet">Balance Sheet</Nav.Link>
+          <Nav.Link eventKey="balance sheet" className={activeTab === 'balance sheet' ? 'active-tab' : ''}>
+            Balance Sheet
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="profitability">Profitability</Nav.Link>
+          <Nav.Link eventKey="profitability" className={activeTab === 'profitability' ? 'active-tab' : ''}>
+            Profitability
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="valuation">Valuation</Nav.Link>
+          <Nav.Link eventKey="valuation" className={activeTab === 'valuation' ? 'active-tab' : ''}>
+            Valuation
+          </Nav.Link>
         </Nav.Item>
       </Nav>
 
-      <div className="h-[400px] w-full">
-        <ResponsiveBar
-          data={data}
-          keys={['ROE', '영업이익률', '매출액증가율']}
-          indexBy="company"
-          margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
-          padding={0.3}
-          valueScale={{ type: 'linear' }}
-          indexScale={{ type: 'band', round: true }}
-          colors={['#36A2EB', '#7C4DFF', '#2ECC71']}
-          borderColor={{
-            from: 'color',
-            modifiers: [['darker', 1.6]],
-          }}
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-          }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Values',
-            legendPosition: 'middle',
-            legendOffset: -40,
-          }}
-          labelSkipWidth={12}
-          labelSkipHeight={12}
-          role="application"
-          ariaLabel="Bar chart comparing company metrics"
-          barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in company: ${e.indexValue}`}
-        />
+      <div className="mt-14">
+        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
       </div>
-    </>
+    </div>
   );
 }

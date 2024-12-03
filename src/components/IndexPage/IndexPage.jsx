@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import SOLog from '/img/SOLog.png?url';
 import logotext from '/img/logotext.png?url';
 import shinhanfriends from '/img/shinhanfriends.png?url';
 import Search from '../Search';
 import RecommendedStocks from './RecommendedStocks';
 import { motion } from 'framer-motion';
+import { CompanyContext } from '../../contexts/CompanyContext';
 
 export default function IndexPage() {
+  const { setUserInputCompany } = useContext(CompanyContext);
+  useEffect(() => {
+    setUserInputCompany('');
+  }, []);
   return (
     <div className="h-screen bg-mainColor pt-20 flex justify-center items-center">
       <div className="transform scale-[80%]">

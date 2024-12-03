@@ -1,22 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { motion } from 'framer-motion';
+import axios from 'axios';
+
 import PastPage from './PastPage';
 import ComparePage from './ComparePage';
-import { motion } from 'framer-motion';
+import { base } from 'framer-motion/client';
+import { CompanyContext } from '../../../contexts/CompanyContext';
+import { compare } from 'react-financial-charts';
 
 export default function PastComparePage() {
+  const [baseData, setBaseData] = useState([]); //차트 위에 데이터
+  const [compareData, setCompareData] = useState([]); //차트 아래 데이터
+  const [compareMarkingData, setCompareMarkingData] = useState(''); //차트 아래 데이터의 끝 날짜
+  const { userInputCompany } = useContext(CompanyContext); //사용자가 선택한 기업
+  const [userSelectDt, setUserSelectDt] = useState(new Date().toISOString().split('T')[0]); //사용자가 선택한 날짜 (초기값은 현재날짜)
+  const [userSelectTerm, setUserSelectTerm] = useState('one'); //사용자가 선택한 기간('one', 'two', 'else)
+  const [periodCnt, setPeriodCnt] = useState(5); //하이라이트할 데이터 개수
+
+  /** Backend에다가 요청 보내기 */
+  const getData = async () => {
+    const url = `/api/chart/trend-match?companyName=${userInputCompany}&period=${userSelectTerm}&baseDate=${userSelectDt}`;
+
+    try {
+      const res = await axios.get(url);
+      console.log('url', url);
+      setBaseData(res.data.baseData);
+      setCompareData(res.data.similarDataList[0]);
+      setCompareMarkingData(res.data.markingDateList[0]);
+      setPeriodCnt(res.data.highlightNum);
+      console.log(compareData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (location.pathname === '/main/pastCompare') {
+      getData();
+    }
+  }, [location]);
+
   return (
-    <div className="pastcomparepage flex-grow w-[88vw] h-screen">
-      <div className="ml-10 mr-10 mb-16 h-[250px]">
-        <PastPage className="shadow-md" />
+    <div className="flex flex-col w-[88vw] h-[88vh] px-[51.356px] py-3 gap-3">
+      <div className="w-full h-1/2">
+        <PastPage
+          className="shadow-md"
+          baseData={baseData}
+          userSelectDt={userSelectDt}
+          setUserSelectDt={setUserSelectDt}
+          userSelectTerm={userSelectTerm}
+          setUserSelectTerm={setUserSelectTerm}
+          periodCnt={periodCnt}
+          getData={getData}
+        />
       </div>
 
-      <div className="ml-10 mr-10 h-[250px]">
+      <div className="w-full h-1/2">
         <motion.div
-          initial={{ y: -315, opacity: 0.85 }}
+          className="w-full h-full"
+          initial={{ y: 0, opacity: 0.85 }} // -315
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: 'spring', duration: 12, delay: 1 }}
+          transition={{ type: 'ease', duration: 6, delay: 2 }}
         >
-          <ComparePage />
+          <ComparePage compareData={compareData} compareMarkingData={compareMarkingData} periodCnt={periodCnt} />
         </motion.div>
       </div>
     </div>
