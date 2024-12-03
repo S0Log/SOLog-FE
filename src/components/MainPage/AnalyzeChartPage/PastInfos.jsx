@@ -56,12 +56,12 @@ export default function PastInfos({ isBarClick, date }) {
         };
 
         const { start, end } = formatDate(date);
-        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
+        // const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
 
         try {
-          // const res = await axios.get(daumNewsUrl);
-          // const $ = cheerio.load(res.data);
-          // const $contentTagArray = $('#dnsColl .c-list-basic > li');
+          //   const res = await axios.get(daumNewsUrl);
+          //   const $ = cheerio.load(res.data);
+          //   const $contentTagArray = $('#dnsColl .c-list-basic > li');
 
           // const result = $contentTagArray
           //   .slice(0, 5)
