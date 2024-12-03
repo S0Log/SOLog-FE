@@ -31,9 +31,7 @@ export default function SideBar() {
             onClick={() => handleClick(index)}
             className="cursor-pointer text-xl mb-7 transition-all duration-200 ease-in-out relative"
           >
-            {/* 텍스트에 z-index를 더 높게 설정 */}
             <span className="relative z-10">{item.name}</span>
-            {/* 배경색 */}
             <div
               className={`absolute left-[-10%] bottom-0 w-[120%] h-[12px] ${item.isActive ? 'bg-[#8CD7F5]/60' : 'bg-transparent'} transition-all duration-200 ease-in-out z-0`}
             />

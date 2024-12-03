@@ -75,9 +75,9 @@ body{
     padding: 0.5rem 1rem;
     font-weight: 550;
 }
-  
+
 .custom-tabs .nav-link.active-tab {
-    color: black; 
+    color: #003FCB !important;
     border-bottom: 2px solid #007bff; 
 }
 
@@ -85,5 +85,3 @@ body{
     text-decoration: none; 
     color: gray;
 }
-
-  

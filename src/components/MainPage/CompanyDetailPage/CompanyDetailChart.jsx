@@ -123,7 +123,7 @@ export default function CompanyDetailChart({ chartData, year, setYear, quarter, 
         },
       },
       chart: {
-        animations: { enabled: false },
+        animations: { enabled: true },
         type: 'candlestick',
         zoom: { enabled: false },
         pan: { enabled: false },

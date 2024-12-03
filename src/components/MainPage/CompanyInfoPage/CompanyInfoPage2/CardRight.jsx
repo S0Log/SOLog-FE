@@ -21,11 +21,10 @@ export default function CardRight({ onNoData }) {
       .catch((error) => console.error('Error fetching data: ', error));
   }, []);
 
-  // Prepare data for Highcharts
   const chartData = marketShareData.map((item) => ({
     name: item.mainProduct,
     y: parseFloat(item.sharePercent || 0),
-    drilldown: item.mainProduct, // You can define drilldown data if needed
+    drilldown: item.mainProduct,
   }));
 
   const options = {
@@ -52,6 +51,7 @@ export default function CardRight({ onNoData }) {
     plotOptions: {
       series: {
         borderWidth: 0,
+        borderRadius: 10,
         dataLabels: {
           enabled: true,
           format: '{point.y:.1f}',
@@ -82,7 +82,7 @@ export default function CardRight({ onNoData }) {
         </div>
       </div>
 
-      <div className="absolute bottom-0 h-[375px] w-full">
+      <div className="absolute bottom-0 h-[400px] w-full">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
     </div>

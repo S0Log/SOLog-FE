@@ -56,67 +56,68 @@ export default function PastInfos({ isBarClick, date }) {
         };
 
         const { start, end } = formatDate(date);
-        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
+        // const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
 
         try {
-          const res = await axios.get(daumNewsUrl);
-          const $ = cheerio.load(res.data);
-          const $contentTagArray = $('#dnsColl .c-list-basic > li');
+          //   const res = await axios.get(daumNewsUrl);
+          //   const $ = cheerio.load(res.data);
+          //   const $contentTagArray = $('#dnsColl .c-list-basic > li');
 
-          const result = $contentTagArray
-            .slice(0, 7)
-            .map((i, el) => {
-              const press = $(el).find('.tit_item').prop('title');
-              const title = $(el).find('.item-title').text();
-              const desc = $(el).find('p.conts-desc.clamp-g2').text();
-              const date = $(el).find('span.gem-subinfo').text();
-              const url = $(el).find('.item-title a').prop('href');
-              return {
-                press,
-                title,
-                desc,
-                date,
-                url,
-              };
-            })
-            .get();
-          // const result = [
-          //   {
-          //     press: '한국경제TV',
-          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-          //     date: ' 2024.11.01 ',
-          //     url: 'http://v.daum.net/v/20241101094350956',
-          //   },
-          //   {
-          //     press: '한국경제TV',
-          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-          //     date: ' 2024.11.01 ',
-          //     url: 'http://v.daum.net/v/20241101094350956',
-          //   },
-          //   {
-          //     press: '한국경제TV',
-          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-          //     date: ' 2024.11.01 ',
-          //     url: 'http://v.daum.net/v/20241101094350956',
-          //   },
-          //   {
-          //     press: '한국경제TV',
-          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-          //     date: ' 2024.11.01 ',
-          //     url: 'http://v.daum.net/v/20241101094350956',
-          //   },
-          //   {
-          //     press: '한국경제TV',
-          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-          //     date: ' 2024.11.01 ',
-          //     url: 'http://v.daum.net/v/20241101094350956',
-          //   },
-          // ];
+          // const result = $contentTagArray
+          //   .slice(0, 5)
+          //   .map((i, el) => {
+          //     const press = $(el).find('.tit_item').prop('title');
+          //     const title = $(el).find('.item-title').text();
+          //     const desc = $(el).find('p.conts-desc.clamp-g2').text();
+          //     const date = $(el).find('span.gem-subinfo').text();
+          //     const url = $(el).find('.item-title a').prop('href');
+          //     return {
+          //       press,
+          //       title,
+          //       desc,
+          //       date,
+          //       url,
+          //     };
+          //   })
+          //   .get();
+
+          const result = [
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+            {
+              press: '한국경제TV',
+              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+              date: ' 2024.11.01 ',
+              url: 'http://v.daum.net/v/20241101094350956',
+            },
+          ];
 
           setArticles(result);
         } catch (error) {
@@ -167,7 +168,7 @@ export default function PastInfos({ isBarClick, date }) {
         };
         try {
           const res = await axios.get(url, { params });
-          console.log(res);
+
           const data = res.data;
           const result = data.map((item) => ({
             logo: securitiesData[item.writer],
@@ -206,7 +207,7 @@ export default function PastInfos({ isBarClick, date }) {
             <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} py-2`}>
               <a
                 href="#"
-                className="text-sm text-black no-underline block overflow-hidden w-full text-ellipsis whitespace-nowrap"
+                className="text-sm text-black no-underline block overflow-hidden w-full text-ellipsis whitespace-nowrap font-semibold"
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedUrl(article.url);
@@ -214,38 +215,40 @@ export default function PastInfos({ isBarClick, date }) {
               >
                 {article.title}
               </a>
-              <p className="text-xs p-0 m-0">{article.desc}</p>
+              <p className="text-xs p-0 m-0 line-clamp-2">{article.desc}</p>
             </li>
           ))}
         </ul>
       </div>
-      <div>
-        <p className="font-semibold p-0 m-0">Reports</p>
-        <ul className="p-0 mb-0">
-          {reports.map((report, idx) => (
-            <li
-              key={idx}
-              className={`flex items-center ${idx !== reports.length - 1 ? 'border-b border-gray-300' : ''} py-2 gap-2`}
-            >
-              <img src={report.logo} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
-              <a
-                href="#"
-                className="text-sm text-black no-underline inline-block"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedUrl(report.url);
-                }}
+      {reports?.length > 0 ? (
+        <div>
+          <p className="font-semibold p-0 m-0">Reports</p>
+          <ul className="p-0 mb-0">
+            {reports.map((report, idx) => (
+              <li
+                key={idx}
+                className={`flex items-center ${idx !== reports.length - 1 ? 'border-b border-gray-300' : ''} py-2 gap-2`}
               >
-                {report.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+                <img src={report.logo} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
+                <a
+                  href="#"
+                  className="text-sm text-black no-underline inline-block font-semibold"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedUrl(report.url);
+                  }}
+                >
+                  {report.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       {selectedUrl && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="rounded-3xl bg-white w-[80%] h-3/4 relative overflow-auto ">
+          <div className="rounded-2xl bg-white w-[80%] h-3/4 relative overflow-auto ">
             <button
               onClick={closeModal}
               className="font-extrabold text-sm text-white absolute top-4 right-6 bg-black bg-opacity-40 rounded-lg px-2 py-2"

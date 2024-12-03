@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { CompanyContext } from '../../../contexts/CompanyContext';
 import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
+import 'react-tooltip/dist/react-tooltip.css';
 
 const CompanyDetail = ({ year, quarter }) => {
   const location = useLocation();
@@ -51,17 +51,16 @@ const CompanyDetail = ({ year, quarter }) => {
 
       switch (quarter) {
         case 1:
-          startDate = new Date(year, 3, 1); // 1분기 (4월 1일)
+          startDate = new Date(year, 4, 1);
           break;
         case 2:
-          startDate = new Date(year, 6, 1); // 2분기 (7월 1일)
+          startDate = new Date(year, 7, 1);
           break;
         case 3:
-          startDate = new Date(year, 9, 1); // 3분기 (10월 1일)
+          startDate = new Date(year, 10, 1);
           break;
         case 4:
-          startDate = new Date(year + 1, 0, 1); // 4분기 (다음 해 1월 1일)
-          break;
+          startDate = new Date(year + 1, 1, 1);
       }
 
       return startDate;
@@ -76,7 +75,7 @@ const CompanyDetail = ({ year, quarter }) => {
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
-
+      console.log(data);
       const updatedTableData = [
         [
           { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
@@ -89,74 +88,74 @@ const CompanyDetail = ({ year, quarter }) => {
             tooltip: glossary['자본금'] ?? '',
           },
           {
-            label: '매출액',
-            value: data.revenue ? `${Math.floor(data.revenue).toLocaleString()} (백만 원)` : '-',
+            label: '누적 매출액',
+            value: data.revenue ? `${parseFloat(data.revenue).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['매출액'] ?? '',
           },
         ],
         [
           {
             label: '매출액증가율',
-            value: data.revenueGrowthRate ? `${Math.floor(data.revenueGrowthRate)} (%)` : '-',
+            value: data.revenueGrowthRate ? `${parseFloat(data.revenueGrowthRate)} (%)` : '-',
             tooltip: glossary['매출액증가율'] ?? '',
           },
           {
-            label: '영업이익',
-            value: data.operIncome ? `${Math.floor(data.operIncome).toLocaleString()} (백만 원)` : '-',
+            label: '누적 영업이익',
+            value: data.operIncome ? `${parseFloat(data.operIncome).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['영업이익'] ?? '',
           },
           {
-            label: '당기순이익',
-            value: data.netIncome ? `${Math.floor(data.netIncome).toLocaleString()} (백만 원)` : '-',
+            label: '누적 당기순이익',
+            value: data.netIncome ? `${parseFloat(data.netIncome).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['당기순이익'] ?? '',
           },
           {
             label: '부채총계',
-            value: data.totalLiabilities ? `${Math.floor(data.totalLiabilities).toLocaleString()} (백만 원)` : '-',
+            value: data.totalLiabilities ? `${parseFloat(data.totalLiabilities).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['부채총계'] ?? '',
           },
         ],
         [
           {
             label: '분기 최고가',
-            value: data.quarterlyHigh ? `${Math.floor(data.quarterlyHigh).toLocaleString()} (원)` : '-',
+            value: data.quarterlyHigh ? `${parseFloat(data.quarterlyHigh).toLocaleString()} (원)` : '-',
             tooltip: glossary['분기 최고가'] ?? '',
           },
           {
             label: '분기 최저가',
-            value: data.quarterlyLow ? `${Math.floor(data.quarterlyLow).toLocaleString()} (원)` : '-',
+            value: data.quarterlyLow ? `${parseFloat(data.quarterlyLow).toLocaleString()} (원)` : '-',
             tooltip: glossary['분기 최저가'] ?? '',
           },
           {
             label: 'PER',
-            value: data.per ? `${Math.floor(data.per)} (배)` : '-',
+            value: data.per ? `${parseFloat(data.per)} (배)` : '-',
             tooltip: glossary['PER'] ?? '',
           },
           {
             label: 'ROE',
-            value: data.roe ? `${Math.floor(data.roe)} (%)` : '-',
+            value: data.roe ? `${parseFloat(data.roe)} (%)` : '-',
             tooltip: glossary['ROE'] ?? '',
           },
         ],
         [
           {
             label: 'PBR',
-            value: data.pbr ? `${Math.floor(data.pbr)} (배)` : '-',
+            value: data.pbr ? `${parseFloat(data.pbr).toFixed(2)} (배)` : '-',
             tooltip: glossary['PBR'] ?? '',
           },
           {
             label: 'EPS',
-            value: data.eps ? `${Math.floor(data.eps).toLocaleString()} (원)` : '-',
+            value: data.eps ? `${parseFloat(data.eps).toLocaleString()} (원)` : '-',
             tooltip: glossary['EPS'] ?? '',
           },
           {
             label: 'BPS',
-            value: data.bps ? `${Math.floor(data.bps).toLocaleString()} (원)` : '-',
+            value: data.bps ? `${parseFloat(data.bps).toLocaleString()} (원)` : '-',
             tooltip: glossary['BPS'] ?? '',
           },
           {
             label: 'ROA',
-            value: data.roa ? `${Math.floor(data.roa)} (%)` : '-',
+            value: data.roa ? `${parseFloat(data.roa)} (%)` : '-',
             tooltip: glossary['ROA'] ?? '',
           },
         ],

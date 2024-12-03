@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 import DurationSelectBar from './DurationSelectBar';
 import AnalyzeChart from './AnalyzeChart';
@@ -89,9 +90,18 @@ export default function AnalyzeChartPage() {
               />
             </div>
           </div>
-          <div className="w-2/5 h-full">
+          {/* <div className="w-2/5 h-full">
             <TotalInfo isBarClick={isBarClick} durationType={durationType} date={date} />
-          </div>
+          </div> */}
+          <motion.div
+            className="w-2/5 h-full"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          >
+            <TotalInfo isBarClick={isBarClick} durationType={durationType} date={date} />
+          </motion.div>
         </div>
       )}
     </div>

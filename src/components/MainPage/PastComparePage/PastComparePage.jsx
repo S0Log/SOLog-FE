@@ -4,16 +4,16 @@ import axios from 'axios';
 
 import PastPage from './PastPage';
 import ComparePage from './ComparePage';
-import { base } from 'framer-motion/client';
 import { CompanyContext } from '../../../contexts/CompanyContext';
-import { compare } from 'react-financial-charts';
 
 export default function PastComparePage() {
   const [baseData, setBaseData] = useState([]); //차트 위에 데이터
-  const [compareData, setCompareData] = useState([]); //차트 아래 데이터
-  const [compareMarkingData, setCompareMarkingData] = useState(''); //차트 아래 데이터의 끝 날짜
+  const [compareDatas, setCompareDatas] = useState([]); //차트 아래 데이터
+  const [compareMarkingDatas, setCompareMarkingDatas] = useState([]); //차트 아래 데이터의 끝 날짜
+  const [compareDataIdx, setCompareDataIdx] = useState(0); //compareDatas에서 몇번째 데이터를 렌더징할지 idx
   const { userInputCompany } = useContext(CompanyContext); //사용자가 선택한 기업
   const [userSelectDt, setUserSelectDt] = useState(new Date().toISOString().split('T')[0]); //사용자가 선택한 날짜 (초기값은 현재날짜)
+  //5일을 빼려면 : useState(new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [userSelectTerm, setUserSelectTerm] = useState('one'); //사용자가 선택한 기간('one', 'two', 'else)
   const [periodCnt, setPeriodCnt] = useState(5); //하이라이트할 데이터 개수
 
@@ -23,12 +23,12 @@ export default function PastComparePage() {
 
     try {
       const res = await axios.get(url);
-      console.log('url', url);
+
       setBaseData(res.data.baseData);
-      setCompareData(res.data.similarDataList[0]);
-      setCompareMarkingData(res.data.markingDateList[0]);
+      setCompareDatas(res.data.similarDataList);
+      setCompareMarkingDatas(res.data.markingDateList);
+      setCompareDataIdx(0);
       setPeriodCnt(res.data.highlightNum);
-      console.log(compareData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -62,7 +62,13 @@ export default function PastComparePage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'ease', duration: 6, delay: 2 }}
         >
-          <ComparePage compareData={compareData} compareMarkingData={compareMarkingData} periodCnt={periodCnt} />
+          <ComparePage
+            compareDatas={compareDatas}
+            compareMarkingDatas={compareMarkingDatas}
+            periodCnt={periodCnt}
+            compareDataIdx={compareDataIdx}
+            setCompareDataIdx={setCompareDataIdx}
+          />
         </motion.div>
       </div>
     </div>
