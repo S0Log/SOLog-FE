@@ -55,6 +55,13 @@ export default function CardLeft() {
               formatter: (val) => `${val}%`,
             },
           },
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontWeight: '200', // 글자 두께 (300은 얇은 두께)
+              colors: ['#FFFFFF'], // 글자 색상
+            },
+          },
           plotOptions: {
             pie: {
               donut: {
@@ -95,7 +102,6 @@ export default function CardLeft() {
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">매출비중 추이</span>
         </div>
-        <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
 
       <div className="h-[280px] w-full mb-6">
@@ -104,7 +110,7 @@ export default function CardLeft() {
           className="mr-2 float-right bottom-2 right-2 text-xs font-medium text-gray-700"
           style={{ pointerEvents: 'none' }}
         >
-          기준: 2023
+          단위: %, 기준: 2023
         </div>
       </div>
 

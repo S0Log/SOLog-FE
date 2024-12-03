@@ -73,6 +73,7 @@ body{
     color: black; 
     border: none; 
     padding: 0.5rem 1rem;
+    font-weight: 550;
 }
   
 .custom-tabs .nav-link.active-tab {
@@ -82,7 +83,7 @@ body{
 
 .custom-tabs .nav-link:hover {
     text-decoration: none; 
-    color: #0056b3;
+    color: gray;
 }
 
   
