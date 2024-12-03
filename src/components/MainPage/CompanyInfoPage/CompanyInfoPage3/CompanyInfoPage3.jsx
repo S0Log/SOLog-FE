@@ -122,8 +122,8 @@ export default function CompanyInfoPage3() {
 
   return (
     <div>
-      <div className="mt-2 font-black flex justify-between items-center border-b pb-2">
-        <span className="text-sm text-muted-foreground ml-auto">기준: 2023.12</span>
+      <div className="mt-2 font-black flex justify-between items-center pb-2">
+        <span className="text-sm font-medium ml-auto">기준: 2023.12</span>
       </div>
       <Nav
         fill

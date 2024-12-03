@@ -3,14 +3,21 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { CompanyContext } from '../../../../contexts/CompanyContext';
 
-export default function CardRight() {
+export default function CardRight({ onNoData }) {
   const [marketShareData, setMarketShareData] = useState([]);
   const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/marketShare`)
+    fetch(`/api/companyInfo/${userInputCompany}/marketShare`)
       .then((response) => response.json())
-      .then((data) => setMarketShareData(data))
+      .then((data) => {
+        setMarketShareData(data);
+        if (data.length === 0) {
+          onNoData(true);
+        } else {
+          onNoData(false);
+        }
+      })
       .catch((error) => console.error('Error fetching data: ', error));
   }, []);
 
@@ -73,7 +80,6 @@ export default function CardRight() {
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">시장 점유율</span>
         </div>
-        <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
 
       <div className="absolute bottom-0 h-[375px] w-full">

@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CardLeft from './CardLeft';
 import CardRight from './CardRight';
 
 export default function CompanyInfoPage2() {
+  const [isRightCardEmpty, setIsRightCardEmpty] = useState(false);
+
   return (
-    <div className="grid gap-7 md:grid-cols-2 h-full">
-      {/* Left Chart */}
+    <div
+      className={`grid gap-7 ${isRightCardEmpty ? 'grid-cols-1 justify-center items-center h-full' : 'md:grid-cols-2'}`}
+    >
       <CardLeft />
-      {/* Right Chart */}
-      <CardRight />
+
+      {!isRightCardEmpty && <CardRight onNoData={(isEmpty) => setIsRightCardEmpty(isEmpty)} />}
     </div>
   );
 }
