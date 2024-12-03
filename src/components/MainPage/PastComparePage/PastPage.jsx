@@ -3,7 +3,7 @@ import Calendar from './Calendar';
 import TermSelect from './TermSelect';
 import PastArticle from './PastArticle';
 import PastCompareInfos from './PastCompareInfos';
-import PastCompareChart from './PastCompareChart';
+import BaseChart from './BaseChart';
 
 const PastPage = ({
   baseData,
@@ -46,7 +46,7 @@ const PastPage = ({
           </div>
         </div>
         <div className="h-[85%] w-full">
-          <PastCompareChart
+          <BaseChart
             baseData={baseData}
             userSelectDt={userSelectDt}
             periodCnt={periodCnt}

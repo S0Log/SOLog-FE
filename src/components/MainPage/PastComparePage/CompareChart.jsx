@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 
-export default function PastCompareChart2({ compareData, compareMarkingData, periodCnt, setIsBarClick, setClickDt }) {
+export default function CompareChart({
+  compareDatas,
+  compareMarkingDatas,
+  periodCnt,
+  compareDataIdx,
+  setCompareDataIdx,
+}) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
 
@@ -11,19 +17,20 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
     const coreDataTmp = [];
     const exteriorDataTmp = [];
 
+    console.log(compareDatas[compareDataIdx]);
     let targetIndex = -1;
     // formattedDate가 userSelectDt이거나 가장 가까운 이전 날짜를 가진 항목 찾기
-    compareData?.forEach((item, index) => {
+    compareDatas[compareDataIdx]?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
-      if (formattedDate <= compareMarkingData) {
-        if (targetIndex === -1 || formattedDate > compareData[targetIndex].date.split(' ')[0]) {
+      if (formattedDate <= compareMarkingDatas[compareDataIdx]) {
+        if (targetIndex === -1 || formattedDate > compareDatas[compareDataIdx][targetIndex].date.split(' ')[0]) {
           targetIndex = index;
         }
       }
     });
 
     // coreDataTmp와 exteriorDataTmp 채우기
-    compareData?.forEach((item, index) => {
+    compareDatas[compareDataIdx]?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
       const open = item.open;
       const high = item.high;
@@ -39,11 +46,11 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
       }
     });
 
-    // console.log('core', coreDataTmp.length);
-    // console.log('exterior', exteriorDataTmp.length);
+    console.log('core', coreDataTmp.length);
+    console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
-  }, [compareData]);
+  }, [compareDataIdx]);
 
   const series = [
     {
@@ -107,16 +114,7 @@ export default function PastCompareChart2({ compareData, compareMarkingData, per
 
   return (
     <div className="w-full h-full">
-      <Chart
-        options={{
-          ...options,
-          grid: {},
-        }}
-        series={series}
-        type="candlestick"
-        height="100%"
-        width="100%"
-      />
+      <Chart options={options} series={series} type="candlestick" height="100%" width="100%" />
     </div>
   );
 }

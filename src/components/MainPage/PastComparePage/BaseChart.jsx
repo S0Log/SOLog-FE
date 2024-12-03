@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 
-export default function PastCompareChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
+export default function BaseChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
 
@@ -57,6 +57,7 @@ export default function PastCompareChart({ baseData, userSelectDt, periodCnt, se
   ];
 
   const options = {
+    dataLabels: { enabled: false },
     plotOptions: {
       candlestick: {
         colors: {
@@ -96,8 +97,6 @@ export default function PastCompareChart({ baseData, userSelectDt, periodCnt, se
       tickAmount: 10,
     },
     yaxis: {
-      // min: yaxisMin,
-      // max: yaxisMax,
       tickAmount: 4,
       tooltip: {
         enabled: false,
