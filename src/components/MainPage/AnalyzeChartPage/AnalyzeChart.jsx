@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo, memo } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useMemo, memo } from 'react';
+
 import Chart from 'react-apexcharts';
 import _ from 'lodash';
 

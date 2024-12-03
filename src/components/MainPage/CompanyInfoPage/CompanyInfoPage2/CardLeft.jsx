@@ -75,11 +75,11 @@ export default function CardLeft() {
             },
           },
           plotOptions: {
-            // pie: {
-            //   donut: {
-            //     size: '65%',
-            //   },
-            // },
+            pie: {
+              donut: {
+                size: '65%',
+              },
+            },
           },
           colors: ['#4caefe', '#3dc3e8', '#2dd9db', '#1feeaf', '#0ff3a0', '#00e887', '#23e274'],
         });

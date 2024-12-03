@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { CompanyContext } from '../../../contexts/CompanyContext';
 import { use } from 'framer-motion/client';
+
+import { CompanyContext } from '../../../contexts/CompanyContext';
 
 export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
   const { userInputCompany } = useContext(CompanyContext);
@@ -54,15 +55,17 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
       <div>
         <div className="flex flex-row justify-between">
           <p className="m-0 text-sm">시가</p>
-          <p className="m-0 text-sm">{renderedData.open.toLocaleString()}원</p>
+          <p className="m-0 text-sm">{renderedData.open != null ? `${renderedData.open.toLocaleString()}원` : '-'}</p>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="m-0 text-sm">종가</p>
-          <p className="m-0 text-sm">{renderedData.close.toLocaleString()}원</p>
+          <p className="m-0 text-sm">종가</p>{' '}
+          <p className="m-0 text-sm">{renderedData.close != null ? `${renderedData.close.toLocaleString()}원` : '-'}</p>
         </div>
         <div className="flex flex-row justify-between">
           <p className="m-0 text-sm">거래량</p>
-          <p className="m-0 text-sm">{renderedData.volume.toLocaleString()}</p>
+          <p className="m-0 text-sm">
+            {renderedData.volume != null ? `${renderedData.volume.toLocaleString()}원` : '-'}
+          </p>
         </div>
       </div>
     </div>

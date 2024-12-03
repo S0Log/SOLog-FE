@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 
-export default function PastCompareChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
+export default function PastCompareChart2({ compareData, compareMarkingData, periodCnt, setIsBarClick, setClickDt }) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
 
@@ -13,17 +13,17 @@ export default function PastCompareChart({ baseData, userSelectDt, periodCnt, se
 
     let targetIndex = -1;
     // formattedDate가 userSelectDt이거나 가장 가까운 이전 날짜를 가진 항목 찾기
-    baseData?.forEach((item, index) => {
+    compareData?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
-      if (formattedDate <= userSelectDt) {
-        if (targetIndex === -1 || formattedDate > baseData[targetIndex].date.split(' ')[0]) {
+      if (formattedDate <= compareMarkingData) {
+        if (targetIndex === -1 || formattedDate > compareData[targetIndex].date.split(' ')[0]) {
           targetIndex = index;
         }
       }
     });
 
     // coreDataTmp와 exteriorDataTmp 채우기
-    baseData?.forEach((item, index) => {
+    compareData?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
       const open = item.open;
       const high = item.high;
@@ -43,7 +43,7 @@ export default function PastCompareChart({ baseData, userSelectDt, periodCnt, se
     // console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
-  }, [baseData]);
+  }, [compareData]);
 
   const series = [
     {

@@ -14,6 +14,8 @@ export default function AnalyzeChartPage() {
   const [chartData, setChartData] = useState([]); //백엔드에서 가져온 주가 데이터
   const [date, setDate] = useState('');
   const { userInputCompany } = useContext(CompanyContext);
+  const [startIndex, setStartIndex] = useState(0); //그려진 차트의 시작 날짜
+  const [endIndex, setEndIndex] = useState(100); //그려진 차트의 끝 날짜
 
   /** Backend에다가 요청 보내기 */
   useEffect(() => {
@@ -34,10 +36,17 @@ export default function AnalyzeChartPage() {
       }
     };
     if (location.pathname === '/main/analyzeChart') {
-      console.log('backend로 요청을 보내요');
       getData();
     }
   }, [location, durationType]);
+
+  /** 차트 시작 & 끝 날짜 정하기 */
+  useEffect(() => {
+    if (chartData.length > 0) {
+      setStartIndex(Math.max(0, chartData.length - 30));
+      setEndIndex(chartData.length);
+    }
+  }, [chartData]);
 
   return (
     <div className="w-[88vw] h-[88vh] px-[51.356px] py-3">
@@ -53,6 +62,10 @@ export default function AnalyzeChartPage() {
               durationType={durationType}
               chartData={chartData}
               setDate={setDate}
+              startIndex={startIndex}
+              setStartIndex={setStartIndex}
+              endIndex={endIndex}
+              setEndIndex={setEndIndex}
             />
           </div>
         </div>
@@ -69,6 +82,10 @@ export default function AnalyzeChartPage() {
                 durationType={durationType}
                 chartData={chartData}
                 setDate={setDate}
+                startIndex={startIndex}
+                setStartIndex={setStartIndex}
+                endIndex={endIndex}
+                setEndIndex={setEndIndex}
               />
             </div>
           </div>
