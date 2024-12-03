@@ -63,9 +63,7 @@ export default function CompanySummaryInfo({ isBarClick, durationType, date }) {
         </div>
         <div className="flex flex-row justify-between">
           <p className="m-0 text-sm">거래량</p>
-          <p className="m-0 text-sm">
-            {renderedData.volume != null ? `${renderedData.volume.toLocaleString()}원` : '-'}
-          </p>
+          <p className="m-0 text-sm">{renderedData.volume != null ? `${renderedData.volume.toLocaleString()}` : '-'}</p>
         </div>
       </div>
     </div>
