@@ -195,6 +195,7 @@ export default function PastInfos({ isBarClick, date }) {
         };
         try {
           const res = await axios.get(url, { params });
+          console.log(res);
           const data = res.data;
           const result = data.map((item) => ({
             logo: securitiesData[item.writer],
@@ -218,12 +219,19 @@ export default function PastInfos({ isBarClick, date }) {
   };
 
   return (
-    <div className="h-full p-2">
+    <div
+      className="h-full p-2 overflow-auto 
+      [&::-webkit-scrollbar]:w-2
+      [&::-webkit-scrollbar-track]:rounded-full
+    [&::-webkit-scrollbar-track]:bg-gray-100
+      [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:bg-gray-300"
+    >
       <div>
-        <p className="font-semibold">Articles</p>
+        <p className="font-semibold p-0 m-0">Articles</p>
         <ul className="p-0 mb-0">
           {articles.map((article, idx) => (
-            <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} pb-2`}>
+            <li key={idx} className={`${idx !== articles.length - 1 ? 'border-b border-gray-300' : ''} py-2`}>
               <a
                 href="#"
                 className="text-sm text-black no-underline block overflow-hidden w-full text-ellipsis whitespace-nowrap"
@@ -234,19 +242,18 @@ export default function PastInfos({ isBarClick, date }) {
               >
                 {article.title}
               </a>
+              <p className="text-xs p-0 m-0">{article.desc}</p>
             </li>
           ))}
         </ul>
       </div>
       <div>
-        <p className="font-semibold">Reports</p>
+        <p className="font-semibold p-0 m-0">Reports</p>
         <ul className="p-0 mb-0">
           {reports.map((report, idx) => (
             <li
               key={idx}
-              className={`flex items-center space-x-1 ${
-                idx !== reports.length - 1 ? 'border-b border-gray-300' : ''
-              } pb-2`}
+              className={`flex items-center ${idx !== reports.length - 1 ? 'border-b border-gray-300' : ''} py-2 gap-2`}
             >
               <img src={report.logo} alt="logo" className="h-auto max-h-[1em]" style={{ height: '1em' }} />
               <a
@@ -266,7 +273,7 @@ export default function PastInfos({ isBarClick, date }) {
 
       {selectedUrl && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="rounded-2xl bg-white w-[80%] h-3/4 relative overflow-auto ">
+          <div className="rounded-3xl bg-white w-[80%] h-3/4 relative overflow-auto ">
             <button
               onClick={closeModal}
               className="font-extrabold text-sm text-white absolute top-4 right-6 bg-black bg-opacity-40 rounded-lg px-2 py-2"
