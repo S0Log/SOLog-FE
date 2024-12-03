@@ -28,13 +28,13 @@ export default function AnalyzeChart({
 
   const handlePan = (direction) => {
     if (direction === 'next' && endIndex < chartData.length) {
-      const newStartIndex = Math.min(chartData.length - DATA_CHUNK_SIZE, startIndex + 10);
-      const newEndIndex = Math.min(chartData.length, endIndex + 10);
+      const newStartIndex = Math.min(chartData.length - DATA_CHUNK_SIZE, startIndex + 5);
+      const newEndIndex = Math.min(chartData.length, endIndex + 5);
       setStartIndex(newStartIndex);
       setEndIndex(newEndIndex);
     } else if (direction === 'previous' && startIndex > 0) {
-      const newStartIndex = Math.max(0, startIndex - 10);
-      const newEndIndex = Math.max(DATA_CHUNK_SIZE, endIndex - 10);
+      const newStartIndex = Math.max(0, startIndex - 5);
+      const newEndIndex = Math.max(DATA_CHUNK_SIZE, endIndex - 5);
       setStartIndex(newStartIndex);
       setEndIndex(newEndIndex);
       console.log('startidx', startIndex);
@@ -79,6 +79,7 @@ export default function AnalyzeChart({
         zoom: { enabled: false },
         pan: { enabled: false },
         toolbar: { show: false },
+        animations: { enabled: false },
         events: {
           click: (event, chartContext, config) => {
             const dataPointIndex = config.dataPointIndex;
