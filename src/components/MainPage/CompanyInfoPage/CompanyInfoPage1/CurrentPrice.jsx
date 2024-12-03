@@ -50,7 +50,7 @@ export default function CurrentPrice() {
             <span className={`flex items-center ${pastData.diff >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
               <span className="mr-1">{pastData.diff >= 0 ? '↑' : '↓'}</span>
               {pastData.diff >= 0 ? `+${pastData.diff.toLocaleString()} ` : `${pastData.diff.toLocaleString()} `}(
-              {Math.abs(pastData.percentage).toFixed(2)}%)
+              {Math.abs(pastData.percentage * 100).toFixed(2)}%)
             </span>
           </div>
         </div>

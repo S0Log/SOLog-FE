@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo, memo } from 'react';
+
 import Chart from 'react-apexcharts';
 import _ from 'lodash';
 
@@ -92,7 +93,13 @@ export default function AnalyzeChart({
         },
       },
       legend: { show: false },
-      xaxis: { type: 'category', tickAmount: 10 },
+      xaxis: {
+        type: 'category',
+        tickAmount: 5,
+        labels: {
+          rotate: 0,
+        },
+      },
       yaxis: { tickAmount: 8, tooltip: { enabled: false } },
     }),
     [renderData, setIsBarClick, setDate],
