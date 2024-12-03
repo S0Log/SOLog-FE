@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
+import _ from 'lodash';
 
 export default function CompareChart({
   compareDatas,
@@ -8,18 +9,27 @@ export default function CompareChart({
   periodCnt,
   compareDataIdx,
   setCompareDataIdx,
+  setIsBarClick,
+  setClickDt,
 }) {
+  const [cumulativeScroll, setCumulativeScroll] = useState(0);
+  const [isMouseOverChart, setIsMouseOverChart] = useState(false);
+
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
+  const [maxVal, setMaxVal] = useState(0);
+  const [minVal, setMinVal] = useState(0);
+
+  const SCROLL_THRESHOLD = 70;
 
   /**coreData, exteriorData 채우기 */
   useEffect(() => {
+    console.log('*compareDataIdx', compareDataIdx);
     const coreDataTmp = [];
     const exteriorDataTmp = [];
 
-    console.log(compareDatas[compareDataIdx]);
     let targetIndex = -1;
-    // formattedDate가 userSelectDt이거나 가장 가까운 이전 날짜를 가진 항목 찾기
+    // formattedDate가 compareMarkingDatas[compareDataIdx]이거나 가장 가까운 이전 날짜를 가진 항목 찾기
     compareDatas[compareDataIdx]?.forEach((item, index) => {
       const formattedDate = item.date.split(' ')[0];
       if (formattedDate <= compareMarkingDatas[compareDataIdx]) {
@@ -46,12 +56,20 @@ export default function CompareChart({
       }
     });
 
+    console.log('len', compareDatas.length);
     console.log('core', coreDataTmp.length);
     console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
-  }, [compareDataIdx]);
+    setMaxVal(Math.max(...(compareDatas?.[compareDataIdx]?.map((obj) => obj.high) || [])));
+    setMinVal(Math.min(...(compareDatas?.[compareDataIdx]?.map((obj) => obj.low) || [])));
+  }, [compareDatas, compareMarkingDatas, periodCnt, compareDataIdx]);
 
+  // useEffect(() => {
+  //   console.log('compareDataIdx updated:', compareDataIdx);
+  // }, [compareDataIdx]);
+
+  // console.log('compareDataIdx updated:', compareDataIdx);
   const series = [
     {
       name: 'core',
@@ -62,6 +80,45 @@ export default function CompareChart({
       data: exteriorData,
     },
   ];
+
+  const handlePan = (direction) => {
+    console.log('handle pan', compareDataIdx);
+    if (direction === 'next' && compareDataIdx > 0) {
+      //지금보다 최신 비슷한 데이터로
+      console.log('in next');
+      setCompareDataIdx(compareDataIdx - 1);
+    } else if (direction === 'previous' && compareDataIdx < compareDatas.length - 1) {
+      //지금보다 과거 비슷한 데이터로
+      console.log('in prev');
+      setCompareDataIdx(compareDataIdx + 1);
+    }
+  };
+
+  const handleWheel = useCallback(
+    _.throttle((e) => {
+      if (isMouseOverChart) {
+        setCumulativeScroll((prev) => {
+          const delta = e.deltaY;
+          const newScroll = prev + delta;
+
+          if (newScroll > SCROLL_THRESHOLD) {
+            //위로 움직일때
+            console.log('next');
+            handlePan('next');
+            return 0;
+          } else if (newScroll < -SCROLL_THRESHOLD) {
+            //아래로 움직일때
+            console.log('prev');
+            handlePan('previous');
+            return 0;
+          }
+
+          return newScroll;
+        });
+      }
+    }, 300),
+    [isMouseOverChart, compareDataIdx],
+  );
 
   const options = {
     plotOptions: {
@@ -100,20 +157,28 @@ export default function CompareChart({
     },
     xaxis: {
       type: 'category',
-      tickAmount: 10,
+      tickAmount: 5,
+      labels: {
+        rotate: 0,
+      },
     },
     yaxis: {
-      // min: yaxisMin,
-      // max: yaxisMax,
       tickAmount: 4,
       tooltip: {
         enabled: false,
       },
+      min: minVal,
+      max: maxVal,
     },
   };
 
   return (
-    <div className="w-full h-full">
+    <div
+      className="w-full h-full"
+      onMouseEnter={() => setIsMouseOverChart(true)}
+      onMouseLeave={() => setIsMouseOverChart(false)}
+      onWheel={handleWheel}
+    >
       <Chart options={options} series={series} type="candlestick" height="100%" width="100%" />
     </div>
   );

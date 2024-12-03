@@ -9,7 +9,7 @@ import { CompanyContext } from '../../../contexts/CompanyContext';
 export default function PastComparePage() {
   const [baseData, setBaseData] = useState([]); //차트 위에 데이터
   const [compareDatas, setCompareDatas] = useState([]); //차트 아래 데이터
-  const [compareMarkingDatas, setCompareMarkingDatas] = useState(''); //차트 아래 데이터의 끝 날짜
+  const [compareMarkingDatas, setCompareMarkingDatas] = useState([]); //차트 아래 데이터의 끝 날짜
   const [compareDataIdx, setCompareDataIdx] = useState(0); //compareDatas에서 몇번째 데이터를 렌더징할지 idx
   const { userInputCompany } = useContext(CompanyContext); //사용자가 선택한 기업
   const [userSelectDt, setUserSelectDt] = useState(new Date().toISOString().split('T')[0]); //사용자가 선택한 날짜 (초기값은 현재날짜)
@@ -26,7 +26,6 @@ export default function PastComparePage() {
 
       setBaseData(res.data.baseData);
       setCompareDatas(res.data.similarDataList);
-      console.log('comparedatas', compareDatas);
       setCompareMarkingDatas(res.data.markingDateList);
       setCompareDataIdx(0);
       setPeriodCnt(res.data.highlightNum);
@@ -57,22 +56,20 @@ export default function PastComparePage() {
       </div>
 
       <div className="w-full h-1/2">
-        {compareDatas.length ? (
-          <motion.div
-            className="w-full h-full"
-            initial={{ y: 0, opacity: 0.85 }} // -315
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: 'ease', duration: 6, delay: 2 }}
-          >
-            <ComparePage
-              compareDatas={compareDatas}
-              compareMarkingDatas={compareMarkingDatas}
-              periodCnt={periodCnt}
-              compareDataIdx={compareDataIdx}
-              setCompareDataIdx={setCompareDataIdx}
-            />
-          </motion.div>
-        ) : null}
+        <motion.div
+          className="w-full h-full"
+          initial={{ y: 0, opacity: 0.85 }} // -315
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: 'ease', duration: 6, delay: 2 }}
+        >
+          <ComparePage
+            compareDatas={compareDatas}
+            compareMarkingDatas={compareMarkingDatas}
+            periodCnt={periodCnt}
+            compareDataIdx={compareDataIdx}
+            setCompareDataIdx={setCompareDataIdx}
+          />
+        </motion.div>
       </div>
     </div>
   );

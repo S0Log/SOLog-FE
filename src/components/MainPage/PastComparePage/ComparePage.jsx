@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from './Calendar';
 import PastCompareInfos from './PastCompareInfos';
 import CompareChart from './CompareChart';
 
 const ComparePage = ({ compareDatas, compareMarkingDatas, periodCnt, compareDataIdx, setCompareDataIdx }) => {
   const [isBarClick, setIsBarClick] = useState(true);
-  const [isTrue, setIsTrue] = useState(false);
+  const [clickDt, setClickDt] = useState(null);
+
+  useEffect(() => {
+    setClickDt(compareMarkingDatas[compareDataIdx]);
+  }, [compareDatas, compareMarkingDatas, periodCnt, compareDataIdx]);
 
   return (
     <div className="flex w-full h-full flex-row gap-3">
       <div className="shadow-md rounded-3xl bg-gray-100 w-3/5 h-full flex flex-col">
-        <div className="w-[7vw] h-[13%]">
+        <div className="w-[9vw] h-[13%]">
           <input
             type="text"
             placeholder="날짜 선택"
             value={compareMarkingDatas[compareDataIdx]?.slice(0, 10) || ''}
-            className="w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none"
+            className="w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none bg-gray-100"
             readOnly
           />
         </div>
@@ -26,11 +30,13 @@ const ComparePage = ({ compareDatas, compareMarkingDatas, periodCnt, compareData
             periodCnt={periodCnt}
             compareDataIdx={compareDataIdx}
             setCompareDataIdx={setCompareDataIdx}
+            setIsBarClick={setIsBarClick}
+            setClickDt={setClickDt}
           />
         </div>
       </div>
       <div className="w-2/5 h-full">
-        <PastCompareInfos isBarClick={isBarClick} />
+        <PastCompareInfos isBarClick={isBarClick} date={clickDt} />
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import axios from 'axios';
 export default function BaseChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
+  const [maxVal, setMaxVal] = useState(0);
+  const [minVal, setMinVal] = useState(0);
 
   /**coreData, exteriorData 채우기 */
   useEffect(() => {
@@ -39,10 +41,10 @@ export default function BaseChart({ baseData, userSelectDt, periodCnt, setIsBarC
       }
     });
 
-    // console.log('core', coreDataTmp.length);
-    // console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
+    setMaxVal(Math.max(...baseData.map((obj) => obj.high)));
+    setMinVal(Math.min(...baseData.map((obj) => obj.low)));
   }, [baseData]);
 
   const series = [
@@ -94,28 +96,24 @@ export default function BaseChart({ baseData, userSelectDt, periodCnt, setIsBarC
     },
     xaxis: {
       type: 'category',
-      tickAmount: 10,
+      tickAmount: 5,
+      labels: {
+        rotate: 0,
+      },
     },
     yaxis: {
       tickAmount: 4,
       tooltip: {
         enabled: false,
       },
+      min: minVal,
+      max: maxVal,
     },
   };
 
   return (
     <div className="w-full h-full">
-      <Chart
-        options={{
-          ...options,
-          grid: {},
-        }}
-        series={series}
-        type="candlestick"
-        height="100%"
-        width="100%"
-      />
+      <Chart options={options} series={series} type="candlestick" height="100%" width="100%" />
     </div>
   );
 }
