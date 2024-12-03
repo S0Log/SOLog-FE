@@ -28,11 +28,11 @@ const PastPage = ({
     <div className="flex w-full h-full flex-row gap-3">
       <div className="shadow-md rounded-3xl bg-white w-3/5 h-full flex flex-col">
         <div className="w-full h-[15%] flex justify-between">
-          <div className="flex">
-            <div className="w-[10vw] h-full mr-2">
+          <div className="flex h-full gap-2">
+            <div className="w-[10vw] h-full">
               <Calendar userSelectDt={userSelectDt} setUserSelectDt={setUserSelectDt} />
             </div>
-            <div>
+            <div className="h-full">
               <TermSelect userSelectTerm={userSelectTerm} setUserSelectTerm={setUserSelectTerm} />
             </div>
           </div>

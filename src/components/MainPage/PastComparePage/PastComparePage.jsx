@@ -6,10 +6,12 @@ import PastPage from './PastPage';
 import ComparePage from './ComparePage';
 import { base } from 'framer-motion/client';
 import { CompanyContext } from '../../../contexts/CompanyContext';
+import { compare } from 'react-financial-charts';
 
 export default function PastComparePage() {
   const [baseData, setBaseData] = useState([]); //차트 위에 데이터
   const [compareData, setCompareData] = useState([]); //차트 아래 데이터
+  const [compareMarkingData, setCompareMarkingData] = useState(''); //차트 아래 데이터의 끝 날짜
   const { userInputCompany } = useContext(CompanyContext); //사용자가 선택한 기업
   const [userSelectDt, setUserSelectDt] = useState(new Date().toISOString().split('T')[0]); //사용자가 선택한 날짜 (초기값은 현재날짜)
   const [userSelectTerm, setUserSelectTerm] = useState('one'); //사용자가 선택한 기간('one', 'two', 'else)
@@ -17,13 +19,16 @@ export default function PastComparePage() {
 
   /** Backend에다가 요청 보내기 */
   const getData = async () => {
-    const url = `/api/chart/trend-match?companyName=${userInputCompany}&period=${userSelectTerm}&baseDate=${userSelectDt}&startDate=${userSelectDt}`;
+    const url = `/api/chart/trend-match?companyName=${userInputCompany}&period=${userSelectTerm}&baseDate=${userSelectDt}`;
+
     try {
       const res = await axios.get(url);
-
-      setBaseData(res.data.chartDataResponseDto[0]);
-      setCompareData(res.data.chartDataResponseDto[1]);
+      console.log('url', url);
+      setBaseData(res.data.baseData);
+      setCompareData(res.data.similarDataList[0]);
+      setCompareMarkingData(res.data.markingDateList[0]);
       setPeriodCnt(res.data.highlightNum);
+      console.log(compareData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -57,7 +62,7 @@ export default function PastComparePage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'ease', duration: 6, delay: 2 }}
         >
-          <ComparePage />
+          <ComparePage compareData={compareData} compareMarkingData={compareMarkingData} periodCnt={periodCnt} />
         </motion.div>
       </div>
     </div>
