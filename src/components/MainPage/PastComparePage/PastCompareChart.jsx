@@ -2,67 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 
-export default function PastCompareChart({ setIsBarClick }) {
+export default function PastCompareChart({ baseData, userSelectDt, periodCnt, setIsBarClick, setClickDt }) {
   const [coreData, setCoreData] = useState([]); //하이라이트되는 데이터
   const [exteriorData, setExteriorData] = useState([]); //이외의 데이터
-  const [yaxisMin, setYaxisMin] = useState(0);
-  const [yaxisMax, setYaxisMax] = useState(0);
-  const startDate = '2024-11-27';
-  const periodCnt = 5;
-  const period = 'one';
-  const companyNm = '삼성전자';
 
-  /** Backend에다가 요청 보내기 */
+  /**coreData, exteriorData 채우기 */
   useEffect(() => {
-    const getData = async () => {
-      const url = `/api/chart/trend-match?companyName=${companyNm}&period=${period}&baseDate=${startDate}&startDate=${startDate}`;
-      try {
-        const res = await axios.get(url);
+    const coreDataTmp = [];
+    const exteriorDataTmp = [];
 
-        const coreDataTmp = [];
-        const exteriorDataTmp = [];
-
-        let targetIndex = -1;
-        console.log(res.data[0]);
-        // formattedDate가 startDate이거나 가장 가까운 이전 날짜를 가진 항목 찾기
-        res.data[0].forEach((item, index) => {
-          const formattedDate = item.date.split(' ')[0];
-          if (formattedDate <= startDate) {
-            if (targetIndex === -1 || formattedDate > res.data[0][targetIndex].date.split(' ')[0]) {
-              targetIndex = index;
-            }
-          }
-        });
-
-        // coreDataTmp와 exteriorDataTmp 채우기
-        res.data[0].forEach((item, index) => {
-          const formattedDate = item.date.split(' ')[0];
-          const open = item.open;
-          const high = item.high;
-          const low = item.low;
-          const close = item.close;
-
-          if (targetIndex !== -1 && index >= targetIndex - (periodCnt - 1) && index <= targetIndex) {
-            coreDataTmp.push({ x: formattedDate, y: [open, high, low, close] });
-            exteriorData.push({ x: formattedDate, y: [null, null, null, null] });
-          } else {
-            exteriorDataTmp.push({ x: formattedDate, y: [open, high, low, close] });
-            coreDataTmp.push({ x: formattedDate, y: [null, null, null, null] });
-          }
-        });
-
-        console.log('core', coreDataTmp);
-        console.log('exterior', exteriorDataTmp);
-        setCoreData(coreDataTmp);
-        setExteriorData(exteriorDataTmp);
-        setYaxisMax(Math.max(...res.data[0].map((item) => item.high)));
-        setYaxisMin(Math.min(...res.data[0].map((item) => item.low)));
-      } catch (error) {
-        console.error('Error fetching data:', error);
+    let targetIndex = -1;
+    // formattedDate가 userSelectDt이거나 가장 가까운 이전 날짜를 가진 항목 찾기
+    baseData?.forEach((item, index) => {
+      const formattedDate = item.date.split(' ')[0];
+      if (formattedDate <= userSelectDt) {
+        if (targetIndex === -1 || formattedDate > baseData[targetIndex].date.split(' ')[0]) {
+          targetIndex = index;
+        }
       }
-    };
-    getData();
-  }, []);
+    });
+
+    // coreDataTmp와 exteriorDataTmp 채우기
+    baseData?.forEach((item, index) => {
+      const formattedDate = item.date.split(' ')[0];
+      const open = item.open;
+      const high = item.high;
+      const low = item.low;
+      const close = item.close;
+
+      if (targetIndex !== -1 && index >= targetIndex - (periodCnt - 1) && index <= targetIndex) {
+        coreDataTmp.push({ x: formattedDate, y: [open, high, low, close] });
+        exteriorDataTmp.push({ x: formattedDate, y: [null, null, null, null] });
+      } else {
+        exteriorDataTmp.push({ x: formattedDate, y: [open, high, low, close] });
+        coreDataTmp.push({ x: formattedDate, y: [null, null, null, null] });
+      }
+    });
+
+    // console.log('core', coreDataTmp.length);
+    // console.log('exterior', exteriorDataTmp.length);
+    setCoreData(coreDataTmp);
+    setExteriorData(exteriorDataTmp);
+  }, [baseData]);
 
   const series = [
     {
@@ -91,8 +72,12 @@ export default function PastCompareChart({ setIsBarClick }) {
       type: 'candlestick',
       events: {
         click: (event, chartContext, config) => {
-          if (config.seriesIndex === 0) {
-            alert('You clicked on a "core" series point!');
+          const dataPointIndex = config.dataPointIndex;
+          if (dataPointIndex !== -1) {
+            setIsBarClick(true);
+            const clickedBarData = coreData[dataPointIndex];
+            const clickedDate = clickedBarData?.x;
+            setClickDt(clickedDate);
           }
         },
       },
@@ -111,8 +96,8 @@ export default function PastCompareChart({ setIsBarClick }) {
       tickAmount: 10,
     },
     yaxis: {
-      min: yaxisMin,
-      max: yaxisMax,
+      // min: yaxisMin,
+      // max: yaxisMax,
       tickAmount: 4,
       tooltip: {
         enabled: false,

@@ -36,7 +36,6 @@ export default function AnalyzeChartPage() {
       }
     };
     if (location.pathname === '/main/analyzeChart') {
-      console.log('backend로 요청을 보내요');
       getData();
     }
   }, [location, durationType]);
