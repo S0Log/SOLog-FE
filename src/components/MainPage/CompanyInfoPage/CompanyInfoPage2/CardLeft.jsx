@@ -12,17 +12,14 @@ export default function CardLeft() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/salesTrendRatio`);
+        const response = await fetch(`/api/companyInfo/${userInputCompany}/salesTrendRatio`);
         const data = await response.json();
 
-        // Extract unique product names
         const uniqueProductNames = [...new Set(data.map((item) => item.productName))];
         setProductNames(uniqueProductNames);
 
-        // Extract unique years
         const years = [...new Set(data.map((item) => item.salesTrendRatioDate.split('-')[0]))];
 
-        // Filter 2023-12 data and handle NaN or null
         const latestData = data
           .filter((item) => item.salesTrendRatioDate === '2023-12')
           .map((item) => ({
@@ -32,7 +29,6 @@ export default function CardLeft() {
               isNaN(item.additionalMetric) || item.additionalMetric === null ? 0 : item.additionalMetric,
           }));
 
-        // Format data for the chart
         const pieData = uniqueProductNames.map((productName) => {
           const productData = latestData.find((item) => item.productName === productName);
           return {
@@ -42,32 +38,54 @@ export default function CardLeft() {
           };
         });
 
-        // Filter out data with all zeros
         const filteredPieData = pieData.filter((item) => item.y > 0);
 
         setChartOptions({
           chart: {
             type: 'donut',
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 300,
+              animateGradually: {
+                enabled: true,
+                delay: 50,
+              },
+              dynamicAnimation: {
+                enabled: true,
+                speed: 350,
+              },
+            },
           },
+
           labels: filteredPieData.map((d) => d.name),
           tooltip: {
             y: {
               formatter: (val) => `${val}%`,
             },
           },
-          plotOptions: {
-            pie: {
-              donut: {
-                size: '65%',
-              },
+          legend: {
+            show: false,
+          },
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontWeight: '200',
+              colors: ['#FFFFFF'],
             },
+          },
+          plotOptions: {
+            // pie: {
+            //   donut: {
+            //     size: '65%',
+            //   },
+            // },
           },
           colors: ['#4caefe', '#3dc3e8', '#2dd9db', '#1feeaf', '#0ff3a0', '#00e887', '#23e274'],
         });
 
         setChartSeries(filteredPieData.map((d) => d.y));
 
-        // Prepare table data
         const processedData = years.map((year) => {
           const yearData = data.filter((item) => item.salesTrendRatioDate.startsWith(year));
           const yearEntry = { year };
@@ -95,7 +113,6 @@ export default function CardLeft() {
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">매출비중 추이</span>
         </div>
-        <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
 
       <div className="h-[280px] w-full mb-6">
@@ -104,14 +121,14 @@ export default function CardLeft() {
           className="mr-2 float-right bottom-2 right-2 text-xs font-medium text-gray-700"
           style={{ pointerEvents: 'none' }}
         >
-          기준: 2023
+          단위: %, 기준: 2023
         </div>
       </div>
 
       <table className="text-xs shadow-md rounded-lg w-full border-none" style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr>
-            <th className="px-1 py-1 text-left" style={{ width: '32%' }}>
+            <th className="px-2 py-2 text-left" style={{ width: '32%' }}>
               제품명
             </th>
             {stackedData.map((data) => (
@@ -122,13 +139,11 @@ export default function CardLeft() {
           </tr>
         </thead>
         <tbody>
-          {productNames.map((name) => (
+          {productNames.slice(0, 4).map((name) => (
             <tr key={name}>
-              <td className="px-1 py-1" style={{ width: '32%' }}>
-                {name}
-              </td>
+              <td className="px-2 py-2 w-1/3 whitespace-nowrap overflow-hidden text-ellipsis">{name}</td>
               {stackedData.map((data) => (
-                <td key={data.year} className="px-1 py-1" style={{ width: `${68 / stackedData.length}%` }}>
+                <td key={data.year} className="px-2 py-2" style={{ width: `${68 / stackedData.length}%` }}>
                   {isNaN(data[name]) ? '-' : data[name]}
                 </td>
               ))}

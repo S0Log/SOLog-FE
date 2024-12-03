@@ -38,11 +38,12 @@ export default function CompanyInfoPage3() {
     };
 
     fetchData();
-  }, [userInputCompany]);
+  }, []);
 
   const getChartData = () => {
     switch (activeTab) {
       case 'price':
+        console.log(price);
         return price.map((item) => ({
           name: item.companyName,
           data: [Number(item.marketCapital.replace(/,/g, ''))],
@@ -100,13 +101,34 @@ export default function CompanyInfoPage3() {
     title: {
       text: '',
     },
+    subtitle: {
+      text:
+        activeTab === 'price' || activeTab === 'balance sheet'
+          ? '단위: 억 원'
+          : activeTab === 'profitability'
+            ? '단위: %'
+            : activeTab === 'valuation'
+              ? '단위: 배'
+              : '',
+      align: 'right',
+      verticalAlign: 'bottom',
+      x: 0,
+      y: -30,
+      style: {
+        fontSize: '12px',
+        color: '#666666',
+      },
+    },
+    legend: {
+      align: 'left',
+    },
     xAxis: {
-      categories: price.map((item) => item.companyName), // X축에 회사 이름 표시
+      categories: price.map((item) => item.companyName),
       title: {},
     },
     yAxis: {
       title: {
-        text: 'Values',
+        text: '',
       },
     },
     plotOptions: {
@@ -114,7 +136,18 @@ export default function CompanyInfoPage3() {
         borderRadius: '15%',
       },
     },
-    series: getChartData(),
+    series:
+      activeTab === 'price'
+        ? [
+            {
+              name: '시가총액',
+              data: price.map((item, index) => ({
+                y: Number(item.marketCapital.replace(/,/g, '')), // 데이터 값
+                color: Highcharts.getOptions().colors[index % Highcharts.getOptions().colors.length], // Highcharts 기본 색상 순환
+              })),
+            },
+          ]
+        : getChartData(),
     credits: {
       enabled: false,
     },
@@ -122,8 +155,8 @@ export default function CompanyInfoPage3() {
 
   return (
     <div>
-      <div className="mt-2 font-black flex justify-between items-center border-b pb-2">
-        <span className="text-sm text-muted-foreground ml-auto">기준: 2023.12</span>
+      <div className="pt-2 pb-2 font-black flex justify-between items-center">
+        <span className="text-sm font-medium ml-auto">기준: 2023.12</span>
       </div>
       <Nav
         fill

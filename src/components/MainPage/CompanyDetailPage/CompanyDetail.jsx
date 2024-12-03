@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { CompanyContext } from '../../../contexts/CompanyContext';
 import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css'; // Tooltip CSS 파일 포함
+import 'react-tooltip/dist/react-tooltip.css';
 
-const CompanyDetail = () => {
+const CompanyDetail = ({ year, quarter }) => {
   const location = useLocation();
   const [tableData, setTableData] = useState([]);
   const [glossary, setGlossary] = useState({});
@@ -30,7 +30,6 @@ const CompanyDetail = () => {
     'ROA',
   ];
 
-  // 용어 정의 가져오기
   async function fetchGlossaryTerms() {
     const glossaryData = {};
     try {
@@ -46,17 +45,37 @@ const CompanyDetail = () => {
     }
   }
 
-  // 회사 정보 가져오기
   async function fetchCompanyInfo() {
+    const getQuarterStartDate = () => {
+      let startDate;
+
+      switch (quarter) {
+        case 1:
+          startDate = new Date(year, 4, 1);
+          break;
+        case 2:
+          startDate = new Date(year, 7, 1);
+          break;
+        case 3:
+          startDate = new Date(year, 10, 1);
+          break;
+        case 4:
+          startDate = new Date(year + 1, 1, 1);
+      }
+
+      return startDate;
+    };
+
     const url = '/api/companyInfo/detail';
     const params = {
       companyName: userInputCompany,
-      date: new Date(),
+      date: getQuarterStartDate(),
     };
+
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
-
+      console.log(data);
       const updatedTableData = [
         [
           { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },
@@ -69,74 +88,74 @@ const CompanyDetail = () => {
             tooltip: glossary['자본금'] ?? '',
           },
           {
-            label: '매출액',
-            value: data.revenue ? `${Math.floor(data.revenue).toLocaleString()} (백만 원)` : '-',
+            label: '누적 매출액',
+            value: data.revenue ? `${parseFloat(data.revenue).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['매출액'] ?? '',
           },
         ],
         [
           {
             label: '매출액증가율',
-            value: data.revenueGrowthRate ? `${Math.floor(data.revenueGrowthRate)} (%)` : '-',
+            value: data.revenueGrowthRate ? `${parseFloat(data.revenueGrowthRate)} (%)` : '-',
             tooltip: glossary['매출액증가율'] ?? '',
           },
           {
-            label: '영업이익',
-            value: data.operIncome ? `${Math.floor(data.operIncome).toLocaleString()} (백만 원)` : '-',
+            label: '누적 영업이익',
+            value: data.operIncome ? `${parseFloat(data.operIncome).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['영업이익'] ?? '',
           },
           {
-            label: '당기순이익',
-            value: data.netIncome ? `${Math.floor(data.netIncome).toLocaleString()} (백만 원)` : '-',
+            label: '누적 당기순이익',
+            value: data.netIncome ? `${parseFloat(data.netIncome).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['당기순이익'] ?? '',
           },
           {
             label: '부채총계',
-            value: data.totalLiabilities ? `${Math.floor(data.totalLiabilities).toLocaleString()} (백만 원)` : '-',
+            value: data.totalLiabilities ? `${parseFloat(data.totalLiabilities).toLocaleString()} (억 원)` : '-',
             tooltip: glossary['부채총계'] ?? '',
           },
         ],
         [
           {
             label: '분기 최고가',
-            value: data.quarterlyHigh ? `${Math.floor(data.quarterlyHigh).toLocaleString()} (원)` : '-',
+            value: data.quarterlyHigh ? `${parseFloat(data.quarterlyHigh).toLocaleString()} (원)` : '-',
             tooltip: glossary['분기 최고가'] ?? '',
           },
           {
             label: '분기 최저가',
-            value: data.quarterlyLow ? `${Math.floor(data.quarterlyLow).toLocaleString()} (원)` : '-',
+            value: data.quarterlyLow ? `${parseFloat(data.quarterlyLow).toLocaleString()} (원)` : '-',
             tooltip: glossary['분기 최저가'] ?? '',
           },
           {
             label: 'PER',
-            value: data.per ? `${Math.floor(data.per)} (배)` : '-',
+            value: data.per ? `${parseFloat(data.per)} (배)` : '-',
             tooltip: glossary['PER'] ?? '',
           },
           {
             label: 'ROE',
-            value: data.roe ? `${Math.floor(data.roe)} (%)` : '-',
+            value: data.roe ? `${parseFloat(data.roe)} (%)` : '-',
             tooltip: glossary['ROE'] ?? '',
           },
         ],
         [
           {
             label: 'PBR',
-            value: data.pbr ? `${Math.floor(data.pbr)} (배)` : '-',
+            value: data.pbr ? `${parseFloat(data.pbr).toFixed(2)} (배)` : '-',
             tooltip: glossary['PBR'] ?? '',
           },
           {
             label: 'EPS',
-            value: data.eps ? `${Math.floor(data.eps).toLocaleString()} (원)` : '-',
+            value: data.eps ? `${parseFloat(data.eps).toLocaleString()} (원)` : '-',
             tooltip: glossary['EPS'] ?? '',
           },
           {
             label: 'BPS',
-            value: data.bps ? `${Math.floor(data.bps).toLocaleString()} (원)` : '-',
+            value: data.bps ? `${parseFloat(data.bps).toLocaleString()} (원)` : '-',
             tooltip: glossary['BPS'] ?? '',
           },
           {
             label: 'ROA',
-            value: data.roa ? `${Math.floor(data.roa)} (%)` : '-',
+            value: data.roa ? `${parseFloat(data.roa)} (%)` : '-',
             tooltip: glossary['ROA'] ?? '',
           },
         ],
@@ -157,15 +176,15 @@ const CompanyDetail = () => {
   }, [location]);
 
   useEffect(() => {
-    if (Object.keys(glossary).length > 0) {
+    if (year !== 0) {
       fetchCompanyInfo();
     }
-  }, [glossary]);
+  }, [year, quarter, glossary]);
 
   return (
-    <div className="mt-0 ml-14 mr-14 mb-2">
-      <table className="shadow-md table border border-gray-300 rounded-2xl overflow-hidden">
-        <tbody className="border border-gray-600">
+    <div className="w-full h-full">
+      <table className="w-full h-full shadow-md bg-white border border-gray-300 rounded-3xl overflow-hidden">
+        <tbody>
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((col, colIndex) => (
@@ -174,7 +193,7 @@ const CompanyDetail = () => {
                     <a data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`} data-tooltip-html={col.tooltip}>
                       <span>{col.label}</span>
                     </a>
-                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" />
+                    <Tooltip id={`tooltip-${rowIndex}-${colIndex}`} className="tooltip" arrow={false} />
                   </td>
                   <td className="border-none p-3 !text-gray-800 font-medium text-[0.8em]">{col.value}</td>
                 </React.Fragment>

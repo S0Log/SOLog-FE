@@ -59,15 +59,15 @@ const top50Companies = [
 
 const Search = () => {
   const { userInputCompany, setUserInputCompany } = useContext(CompanyContext);
+  const [userInput, setUserInput] = useState('');
   const [results, setResults] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const navigate = useNavigate();
   const listRefs = useRef([]);
   const location = useLocation();
 
   const handleChange = (e) => {
     const input = e.target.value;
-    setUserInputCompany(input);
+    setUserInput(input);
 
     if (input.trim() === '') {
       setResults([]);
@@ -101,6 +101,7 @@ const Search = () => {
       });
     } else if (e.key === 'Enter') {
       if (activeIndex >= 0 && activeIndex < results.length) {
+        setUserInput(results[activeIndex]);
         setUserInputCompany(results[activeIndex]);
         setResults([]);
       } else {
@@ -119,14 +120,13 @@ const Search = () => {
   };
 
   const handleSearch = () => {
-    if (top50Companies.includes(userInputCompany.toUpperCase())) {
-      setUserInputCompany(userInputCompany.toUpperCase());
+    if (top50Companies.includes(userInput.toUpperCase())) {
+      setUserInputCompany(userInput.toUpperCase());
 
-      // index 페이지인지 확인
       if (location.pathname === '/' || location.pathname === '') {
-        window.location.href = window.location.origin + '/main/companyInfo'; // index 페이지로 이동
+        window.location.href = window.location.origin + '/main/companyInfo';
       } else {
-        window.location.href = window.location.origin + location.pathname; // 페이지 새로고침
+        window.location.href = window.location.origin + location.pathname;
       }
     } else {
       alert('해당 기업에 대한 정보를 제공하지 않습니다. 다른 기업으로 검색해주세요.');
@@ -138,11 +138,11 @@ const Search = () => {
       <div className="relative w-[35vw] px-[51.356px] bg-white rounded-3xl py-3 pl-5 shadow-md">
         <input
           type="text"
-          placeholder="종목을 입력해주세요."
+          placeholder={userInputCompany ? userInputCompany : '종목을 입력해주세요.'}
           className="w-full placeholder-gray-400 focus:outline-none"
           onChange={handleChange}
-          value={userInputCompany}
           onKeyDown={handleKeyDown}
+          value={userInput}
         />
         <button
           onClick={handleSearch}

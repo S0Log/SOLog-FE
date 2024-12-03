@@ -3,22 +3,28 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { CompanyContext } from '../../../../contexts/CompanyContext';
 
-export default function CardRight() {
+export default function CardRight({ onNoData }) {
   const [marketShareData, setMarketShareData] = useState([]);
   const { userInputCompany } = useContext(CompanyContext);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/companyInfo/${userInputCompany}/marketShare`)
+    fetch(`/api/companyInfo/${userInputCompany}/marketShare`)
       .then((response) => response.json())
-      .then((data) => setMarketShareData(data))
+      .then((data) => {
+        setMarketShareData(data);
+        if (data.length === 0) {
+          onNoData(true);
+        } else {
+          onNoData(false);
+        }
+      })
       .catch((error) => console.error('Error fetching data: ', error));
   }, []);
 
-  // Prepare data for Highcharts
   const chartData = marketShareData.map((item) => ({
     name: item.mainProduct,
     y: parseFloat(item.sharePercent || 0),
-    drilldown: item.mainProduct, // You can define drilldown data if needed
+    drilldown: item.mainProduct,
   }));
 
   const options = {
@@ -45,6 +51,7 @@ export default function CardRight() {
     plotOptions: {
       series: {
         borderWidth: 0,
+        borderRadius: 10,
         dataLabels: {
           enabled: true,
           format: '{point.y:.1f}',
@@ -73,10 +80,9 @@ export default function CardRight() {
         <div className="flex items-center space-x-2">
           <span className="text-gray-900 font-semibold">시장 점유율</span>
         </div>
-        <span className="text-gray-500 text-sm">단위 : %</span>
       </div>
 
-      <div className="absolute bottom-0 h-[375px] w-full">
+      <div className="absolute bottom-0 h-[400px] w-full">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
     </div>
