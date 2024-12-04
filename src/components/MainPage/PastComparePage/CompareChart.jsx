@@ -78,7 +78,6 @@ export default function CompareChart({
   ];
 
   const handlePan = (direction) => {
-    console.log('handle pan', compareDataIdx);
     if (direction === 'next' && compareDataIdx > 0) {
       //지금보다 최신 비슷한 데이터로
       setCompareDataIdx(compareDataIdx - 1);

@@ -24,7 +24,6 @@ export default function AnalyzeChartPage() {
       const url = `/api/chart/company-detail?durationType=${durationType}&companyName=${userInputCompany}`;
       try {
         const res = await axios.get(url);
-        console.log(res.data);
 
         const data = [];
         res.data.forEach((item, idx) => {

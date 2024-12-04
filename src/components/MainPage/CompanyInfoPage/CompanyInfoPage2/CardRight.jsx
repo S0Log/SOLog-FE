@@ -72,6 +72,9 @@ export default function CardRight({ onNoData }) {
     credits: {
       enabled: false,
     },
+    accessibility: {
+      enabled: false,
+    },
   };
 
   return (

@@ -148,6 +148,9 @@ export default function CompanyInfoPage3() {
     credits: {
       enabled: false,
     },
+    accessibility: {
+      enabled: false,
+    },
   };
 
   return (
