@@ -56,72 +56,73 @@ export default function PastInfos({ isBarClick, date }) {
         };
 
         const { start, end } = formatDate(date);
-        // const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
+        const daumNewsUrl = `/daumreq/search?w=news&nil_search=btn&DA=STC&enc=utf8&cluster=y&cluster_page=1&q=${userInputCompany}&sd=${start}&ed=${end}&period=u`;
 
         try {
-          //   const res = await axios.get(daumNewsUrl);
-          //   const $ = cheerio.load(res.data);
-          //   const $contentTagArray = $('#dnsColl .c-list-basic > li');
+          const res = await axios.get(daumNewsUrl);
+          const $ = cheerio.load(res.data);
+          const $contentTagArray = $('#dnsColl .c-list-basic > li');
 
-          // const result = $contentTagArray
-          //   .slice(0, 5)
-          //   .map((i, el) => {
-          //     const press = $(el).find('.tit_item').prop('title');
-          //     const title = $(el).find('.item-title').text();
-          //     const desc = $(el).find('p.conts-desc.clamp-g2').text();
-          //     const date = $(el).find('span.gem-subinfo').text();
-          //     const url = $(el).find('.item-title a').prop('href');
-          //     return {
-          //       press,
-          //       title,
-          //       desc,
-          //       date,
-          //       url,
-          //     };
-          //   })
-          //   .get();
+          const result = $contentTagArray
+            .slice(0, 5)
+            .map((i, el) => {
+              const press = $(el).find('.tit_item').prop('title');
+              const title = $(el).find('.item-title').text();
+              const desc = $(el).find('p.conts-desc.clamp-g2').text();
+              const date = $(el).find('span.gem-subinfo').text();
+              const url = $(el).find('.item-title a').prop('href');
+              return {
+                press,
+                title,
+                desc,
+                date,
+                url,
+              };
+            })
+            .get();
 
-          const result = [
-            {
-              press: '한국경제TV',
-              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-              desc: '주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-              date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101094350956',
-            },
-            {
-              press: '한국경제TV',
-              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-              date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101094350956',
-            },
-            {
-              press: '한국경제TV',
-              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-              date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101094350956',
-            },
-            {
-              press: '한국경제TV',
-              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-              date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101094350956',
-            },
-            {
-              press: '한국경제TV',
-              title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
-              desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
-              date: ' 2024.11.01 ',
-              url: 'http://v.daum.net/v/20241101094350956',
-            },
-          ];
+          // const result = [
+          //   {
+          //     press: '한국경제TV',
+          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+          //     desc: '주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+          //     date: ' 2024.11.01 ',
+          //     url: 'http://v.daum.net/v/20241101094350956',
+          //   },
+          //   {
+          //     press: '한국경제TV',
+          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+          //     date: ' 2024.11.01 ',
+          //     url: 'http://v.daum.net/v/20241101094350956',
+          //   },
+          //   {
+          //     press: '한국경제TV',
+          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+          //     date: ' 2024.11.01 ',
+          //     url: 'http://v.daum.net/v/20241101094350956',
+          //   },
+          //   {
+          //     press: '한국경제TV',
+          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+          //     date: ' 2024.11.01 ',
+          //     url: 'http://v.daum.net/v/20241101094350956',
+          //   },
+          //   {
+          //     press: '한국경제TV',
+          //     title: "   기대치 밑돈 실적에 삼성전자 목표주가 '줄하향'   ",
+          //     desc: '  주가 탄력성이 예상보다 강할 수 있다"고 밝혔다. 김동원 KB증권 리서치센터장도 "P/…진입 여부가 중장기 상승 모멘텀으로 작용할 것"이라고 내다봤다. (사진=연합뉴스...  ',
+          //     date: ' 2024.11.01 ',
+          //     url: 'http://v.daum.net/v/20241101094350956',
+          //   },
+          // ];
 
           setArticles(result);
         } catch (error) {
           console.error('Error fetching data:', error);
+          setArticles([]);
         }
       };
 

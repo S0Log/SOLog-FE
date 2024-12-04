@@ -10,10 +10,19 @@ const Calendar = ({ userSelectDt, setUserSelectDt }) => {
   };
 
   const handleDateChange = (date) => {
+    const dayOfWeek = date.getDay(); // 요일 확인 (0: 일요일, 6: 토요일)
+
+    // 주말인 경우 처리
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      alert('주말은 선택할 수 없습니다.');
+      return;
+    }
+
     const formattedDate = date
       .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
       .replace(/\./g, '')
       .replace(/ /g, '-');
+
     setUserSelectDt(formattedDate);
     setIsCalendarOpen(false);
   };

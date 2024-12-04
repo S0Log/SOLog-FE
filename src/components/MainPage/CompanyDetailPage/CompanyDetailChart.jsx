@@ -19,6 +19,7 @@ export default function CompanyDetailChart({ chartData, year, setYear, quarter, 
       const today = new Date();
       const currentYear = today.getFullYear();
       const currentMonth = today.getMonth() + 1;
+
       if (currentMonth <= 3) {
         setYear(currentYear - 1);
         setQuarter(4);
@@ -139,11 +140,11 @@ export default function CompanyDetailChart({ chartData, year, setYear, quarter, 
         },
       },
       title: {
-        text: `${year}-Q${quarter}`,
+        text: `${year}-${quarter}Q`,
         align: 'right',
         style: {
           fontSize: '16px',
-          fontWeight: 'light',
+          fontWeight: 'bold',
           color: 'black',
         },
       },
