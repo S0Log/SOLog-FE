@@ -10,7 +10,11 @@ const Calendar = ({ userSelectDt, setUserSelectDt }) => {
   };
 
   const handleDateChange = (date) => {
-    setUserSelectDt(date.toISOString().split('T')[0]);
+    const formattedDate = date
+      .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+      .replace(/\./g, '')
+      .replace(/ /g, '-');
+    setUserSelectDt(formattedDate);
     setIsCalendarOpen(false);
   };
 
