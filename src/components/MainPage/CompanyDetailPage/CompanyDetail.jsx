@@ -75,7 +75,6 @@ const CompanyDetail = ({ year, quarter }) => {
     try {
       const res = await axios.get(url, { params });
       const data = res.data;
-      console.log(data);
       const updatedTableData = [
         [
           { label: '시장 종류', value: data.marketType ?? '-', tooltip: glossary['시장 종류'] ?? '' },

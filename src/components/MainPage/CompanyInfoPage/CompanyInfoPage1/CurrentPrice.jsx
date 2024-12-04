@@ -22,7 +22,6 @@ export default function CurrentPrice() {
     const url = `/api/companyInfo/${userInputCompany}/daily`;
     const res = await axios.get(url, { userInputCompany });
     const data = res.data;
-    console.log(data);
     setPastData((prev) => ({ ...prev, ...data }));
   };
   useEffect(() => {
@@ -38,16 +37,23 @@ export default function CurrentPrice() {
     <div>
       <Card className="p-6">
         <div className="space-y-2">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500" style={{ fontFamily: 'Arial, sans-serif' }}>
             {pastData.companyNum} {pastData.marketType}
           </div>
-          <h1 className="text-2xl font-bold">{pastData.companyName}</h1>
+          <h1 className="text-2xl font-bold" style={{ fontFamily: 'Arial, sans-serif' }}>
+            {pastData.companyName}
+          </h1>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold">{pastData.yesterday.toLocaleString()} KRW</span>
+            <span className="text-3xl font-bold" style={{ fontFamily: 'Arial, sans-serif' }}>
+              {pastData.yesterday.toLocaleString()} KRW
+            </span>
           </div>
 
           <div>
-            <span className={`flex items-center ${pastData.diff >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
+            <span
+              className={`flex items-center ${pastData.diff >= 0 ? 'text-red-500' : 'text-blue-500'}`}
+              style={{ fontFamily: 'Arial, sans-serif' }}
+            >
               <span className="mr-1">{pastData.diff >= 0 ? '↑' : '↓'}</span>
               {pastData.diff >= 0 ? `+${pastData.diff.toLocaleString()} ` : `${pastData.diff.toLocaleString()} `}(
               {Math.abs(pastData.percentage * 100).toFixed(2)}%)

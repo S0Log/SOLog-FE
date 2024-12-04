@@ -45,10 +45,6 @@ export default function Sample() {
         // console.log('ABAB');
         switch (type) {
           case 'click':
-            console.log('sdfsdfsdfsdfsdf');
-            console.log(moreProps);
-            console.log(_);
-            console.log(e);
         }
         // console.log(type);
         // console.log(moreProps);
