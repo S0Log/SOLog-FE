@@ -162,8 +162,10 @@ const Search = () => {
                 ref={(el) => (listRefs.current[index] = el)}
                 className={`pl-5 py-3 cursor-pointer ${activeIndex === index ? 'bg-gray-100' : ''}`}
                 onClick={() => {
+                  setUserInput(company);
                   setUserInputCompany(company);
                   setResults([]);
+                  setActiveIndex(-1);
                 }}
               >
                 {company}
