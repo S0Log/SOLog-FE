@@ -12,8 +12,17 @@ export default function PastComparePage() {
   const [compareMarkingDatas, setCompareMarkingDatas] = useState([]); //차트 아래 데이터의 끝 날짜
   const [compareDataIdx, setCompareDataIdx] = useState(0); //compareDatas에서 몇번째 데이터를 렌더징할지 idx
   const { userInputCompany } = useContext(CompanyContext); //사용자가 선택한 기업
-  const [userSelectDt, setUserSelectDt] = useState(new Date().toISOString().split('T')[0]); //사용자가 선택한 날짜 (초기값은 현재날짜)
-  //5일을 빼려면 : useState(new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+  const [userSelectDt, setUserSelectDt] = useState(
+    (() => {
+      let date = new Date(),
+        days = 6;
+      while (days > 0) {
+        date.setDate(date.getDate() - 1);
+        if (date.getDay() !== 0 && date.getDay() !== 6) days--;
+      }
+      return date.toISOString().split('T')[0];
+    })(),
+  );
   const [userSelectTerm, setUserSelectTerm] = useState('one'); //사용자가 선택한 기간('one', 'two', 'else)
   const [periodCnt, setPeriodCnt] = useState(5); //하이라이트할 데이터 개수
 
