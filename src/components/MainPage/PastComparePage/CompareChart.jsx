@@ -24,7 +24,6 @@ export default function CompareChart({
 
   /**coreData, exteriorData 채우기 */
   useEffect(() => {
-    console.log('*compareDataIdx', compareDataIdx);
     const coreDataTmp = [];
     const exteriorDataTmp = [];
 
@@ -56,9 +55,6 @@ export default function CompareChart({
       }
     });
 
-    console.log('len', compareDatas.length);
-    console.log('core', coreDataTmp.length);
-    console.log('exterior', exteriorDataTmp.length);
     setCoreData(coreDataTmp);
     setExteriorData(exteriorDataTmp);
     setMaxVal(Math.max(...(compareDatas?.[compareDataIdx]?.map((obj) => obj.high) || [])));
@@ -85,11 +81,9 @@ export default function CompareChart({
     console.log('handle pan', compareDataIdx);
     if (direction === 'next' && compareDataIdx > 0) {
       //지금보다 최신 비슷한 데이터로
-      console.log('in next');
       setCompareDataIdx(compareDataIdx - 1);
     } else if (direction === 'previous' && compareDataIdx < compareDatas.length - 1) {
       //지금보다 과거 비슷한 데이터로
-      console.log('in prev');
       setCompareDataIdx(compareDataIdx + 1);
     }
   };
@@ -103,12 +97,12 @@ export default function CompareChart({
 
           if (newScroll > SCROLL_THRESHOLD) {
             //위로 움직일때
-            console.log('next');
+            // console.log('next');
             handlePan('next');
             return 0;
           } else if (newScroll < -SCROLL_THRESHOLD) {
             //아래로 움직일때
-            console.log('prev');
+            // console.log('prev');
             handlePan('previous');
             return 0;
           }
