@@ -37,7 +37,6 @@ export default function AnalyzeChart({
       const newEndIndex = Math.max(DATA_CHUNK_SIZE, endIndex - 5);
       setStartIndex(newStartIndex);
       setEndIndex(newEndIndex);
-      console.log('startidx', startIndex);
     }
   };
 
