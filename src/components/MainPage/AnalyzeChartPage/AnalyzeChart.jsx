@@ -91,16 +91,6 @@ export default function AnalyzeChart({
           },
         },
       },
-      // title: {
-      //   text: '*봉을 클릭하시면 해당 날짜의 상세한 정보를 확인할 수 있습니다',
-      //   align: 'left',
-      //   offsetY: 500,
-      //   style: {
-      //     fontSize: '13px',
-      //     fontWeight: 'light',
-      //     color: 'black',
-      //   },
-      // },
       legend: { show: false },
       xaxis: {
         type: 'category',
