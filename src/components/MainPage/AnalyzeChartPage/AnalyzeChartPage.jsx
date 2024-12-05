@@ -89,9 +89,6 @@ export default function AnalyzeChartPage() {
               />
             </div>
           </div>
-          {/* <div className="w-2/5 h-full">
-            <TotalInfo isBarClick={isBarClick} durationType={durationType} date={date} />
-          </div> */}
           <motion.div
             className="w-2/5 h-full"
             initial={{ x: '100%' }}

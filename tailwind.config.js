@@ -7,10 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainColor: '#DBEDF4', // 추가한 사용자 정의 색상
+        mainColor: '#DBEDF4',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'], // Inter 글씨체 추가
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
       },
       flex: {
         4: '4 1 0%',
