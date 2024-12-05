@@ -61,11 +61,6 @@ export default function CompareChart({
     setMinVal(Math.min(...(compareDatas?.[compareDataIdx]?.map((obj) => obj.low) || [])));
   }, [compareDatas, compareMarkingDatas, periodCnt, compareDataIdx]);
 
-  // useEffect(() => {
-  //   console.log('compareDataIdx updated:', compareDataIdx);
-  // }, [compareDataIdx]);
-
-  // console.log('compareDataIdx updated:', compareDataIdx);
   const series = [
     {
       name: 'core',
@@ -96,12 +91,10 @@ export default function CompareChart({
 
           if (newScroll > SCROLL_THRESHOLD) {
             //위로 움직일때
-            // console.log('next');
             handlePan('next');
             return 0;
           } else if (newScroll < -SCROLL_THRESHOLD) {
             //아래로 움직일때
-            // console.log('prev');
             handlePan('previous');
             return 0;
           }
